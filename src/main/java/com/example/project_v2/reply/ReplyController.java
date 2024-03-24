@@ -9,10 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @Controller
@@ -30,20 +27,18 @@ public class ReplyController {
     }
 
     // 댓글 삭제
-    @DeleteMapping("/api/replies/{id}")
-    public ResponseEntity<?> delete(@PathVariable Integer id) {
-        User sessionUser = (User) session.getAttribute("sessionUser");
-        replyService.댓글삭제(id, sessionUser.getId());
-        return ResponseEntity.ok(new ApiUtil<>(null));
+//    @DeleteMapping("/api/replies/{id}")
+//    public ResponseEntity<?> delete(@PathVariable Integer replyId) {
+//        User sessionUser = (User) session.getAttribute("sessionUser");
+//        replyService.댓글삭제(replyId, sessionUser.getId());
+////        return ResponseEntity.ok(new ApiUtil<>(null));
+//            return "redirect:/board/"+ boardId;
+//    }
 
-        @Transactional
-        public void 댓글삭제 ( int replyID, int sessionUserId){
-            Reply reply = replyJPARepository.findById(replyid)
-                    .orElseThrow(() -> new Exception404("없는 댓글을 삭제할 수 업어요"));
-            if (reply.getUser().getId() != SessionUserId) {
-                throw new Exception403("댓글을 삭제할 권한이 없어요");
-            }
-            replyJPARepository.deletedById(replyId);
-        }
+    @PostMapping("/board/{boardId}/reply/{replyId}/delete")
+    public String delete(@PathVariable Integer boardId, @PathVariable Integer replyId) {
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        replyService.댓글삭제(replyId, sessionUser.getId());
+        return "redirect:/board/" + boardId;
     }
 }
