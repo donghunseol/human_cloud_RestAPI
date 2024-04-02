@@ -12,16 +12,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-<<<<<<< HEAD
-import java.util.Base64;
-=======
->>>>>>> a924a3bab903e6e30221b91b187757ffdcdf2ff0
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
