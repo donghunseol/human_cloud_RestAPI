@@ -3,6 +3,7 @@ package com.example.project_v2.scrap;
 import com.example.project_v2.notice.Notice;
 import com.example.project_v2.resume.Resume;
 import com.example.project_v2.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -16,18 +17,20 @@ import java.sql.Timestamp;
 @Data
 @Entity
 @Table(name="scrap_tb")
-@JsonIgnoreProperties({"user","resume", "notice"})
 public class Scrap {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id; // 스크랩 ID
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private User user; // 스크랩한 유저 번호, 스크랩한 유저의 role 값
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private Resume resume; // 이력서 번호
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private Notice notice; // 공고 번호
 

@@ -12,20 +12,28 @@ public class ScrapResponse {
     public static class ScrapListDTO{
         private Integer id; // 스크랩 번호
         private Integer userId; // 스크랩 유저 번호
-        private Integer noticeId; // 공고 주인 번호
-        private String noticeUsername; // 공고 주인 이름
+        private Integer scrapedId; // 공고 번호 또는 이력서 번호
+        private String username; // 공고 또는 이력서의 주인 이름
         private String deadline; // 공고 마감일
-        private String title; // 공고 제목
+        private String title; // 공고 제목 또는 이력서 제목
         private String type; // 고용 형태
 
-        public ScrapListDTO(Scrap scrap, Integer sessionUserId) {
+        public ScrapListDTO(Scrap scrap, User sessionUser) {
             this.id = scrap.getId();
-            this.userId = sessionUserId;
-            this.noticeId = scrap.getNotice().getId();
-            this.noticeUsername = scrap.getNotice().getUser().getUsername();
-            this.deadline = scrap.getNotice().getDeadline();
-            this.title = scrap.getNotice().getTitle();
-            this.type = scrap.getNotice().getType();
+            this.userId = sessionUser.getId();
+            if(sessionUser.getRole() == 0){
+                this.scrapedId = scrap.getNotice().getId();
+                this.username = scrap.getNotice().getUser().getUsername();
+                this.deadline = scrap.getNotice().getDeadline();
+                this.title = scrap.getNotice().getTitle();
+                this.type = scrap.getNotice().getType();
+            }else{
+                this.scrapedId = scrap.getResume().getId();
+                this.username = scrap.getResume().getUser().getUsername();
+                this.deadline = "";
+                this.title = scrap.getResume().getTitle();
+                this.type = "";
+            }
         }
     }
 

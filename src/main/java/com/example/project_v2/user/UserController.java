@@ -133,11 +133,9 @@ public class UserController {
                                        @RequestParam(defaultValue = "desc") String direction,
                                        @PathVariable Integer id) {
         User sessionUser = (User) session.getAttribute("sessionUser");
-
-
         Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
-        List<ScrapResponse.ScrapListDTO> respDTO = scrapService.scrapList(sessionUser.getId(), id, pageable);
+        List<ScrapResponse.ScrapListDTO> respDTO = scrapService.scrapList(sessionUser, id, pageable);
         return ResponseEntity.ok(new ApiUtil<>(respDTO));
     }
 }
