@@ -13,7 +13,7 @@ public class ResumeRequest {
     public static class SaveDTO {
         private User user;
 
-        @Size(min = 1, max = 20, message = "제목은 20차를 초과할 수 없습니다")
+        @Size(min = 1, max = 20, message = "제목은 20자를 초과할 수 없습니다")
         @NotEmpty(message = "제목을 입력해주세요")
         private String title; // 이력서 제목
 
@@ -54,7 +54,7 @@ public class ResumeRequest {
     public static class UpdateDTO{
         private User user;
 
-        @Size(min = 1, max = 20, message = "제목은 20차를 초과할 수 없습니다")
+        @Size(min = 1, max = 20, message = "제목은 20자를 초과할 수 없습니다")
         @NotEmpty(message = "제목을 입력해주세요")
         private String title; // 이력서 제목
 
