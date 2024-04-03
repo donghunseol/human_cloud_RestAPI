@@ -26,7 +26,8 @@ spring:
     properties:
       hibernate:
         default_batch_fetch_size: 10
-    open-in-view: true
+    defer-datasource-initialization: true
+    open-in-view: false
 
 logging:
   level:
