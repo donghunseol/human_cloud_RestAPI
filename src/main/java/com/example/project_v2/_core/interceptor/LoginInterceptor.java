@@ -30,13 +30,8 @@ public class LoginInterceptor implements HandlerInterceptor{
         try {
             SessionUser sessionUser = JwtUtil.verify(jwt);
 
-            System.out.println(jwt);
-
             // 임시 세선 (jsessionId 는 필요 없다!)
             HttpSession session = request.getSession();
-
-            System.out.println(sessionUser.getId());
-
             session.setAttribute("sessionUser", sessionUser);
             return true;
         } catch (TokenExpiredException e) {

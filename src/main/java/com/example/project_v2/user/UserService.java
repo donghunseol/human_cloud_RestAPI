@@ -93,7 +93,7 @@ public class UserService {
 
     // 사용자의 role 에 따라 메인페이지 화면 변경
     @Transactional
-    public List<?> getMainPageByUserRole(User sessionUser, Pageable pageable) {
+    public List<?> getMainPageByUserRole(SessionUser sessionUser, Pageable pageable) {
         List<?> resultList = new ArrayList<>();
 
         if (sessionUser != null) { // 로그인시
@@ -118,11 +118,13 @@ public class UserService {
 
     // 메인페이지 스킬 검색 서비스
     @Transactional
-    public List<?> getMainPageByUserRoleAndSkill(User sessionUser, String skillName, Pageable pageable) {
+    public List<?> getMainPageByUserRoleAndSkill(SessionUser sessionUser, String skillName, Pageable pageable) {
+        User user = userJPARepository.findById(sessionUser.getId())
+                .orElseThrow(() -> new Exception404("존재 하지 않는 계정입니다"));
         List<?> resultList = new ArrayList<>();
 
-        if (sessionUser != null) { // 로그인시
-            if (sessionUser.getRole() == 1) {
+        if (user != null) { // 로그인시
+            if (user.getRole() == 1) {
                 // Role이 1인 경우 Resume 리스트 반환
                 resultList = resumeJPARepository.findBySkill(skillName, pageable).stream()
                         .map(resume -> new ResumeResponse.ResumeListDTO((Resume) resume))
@@ -143,18 +145,20 @@ public class UserService {
 
     // 마이페이지
     @Transactional
-    public List<?> getMyPage(User sessionUser, Pageable pageable) {
+    public List<?> getMyPage(SessionUser sessionUser, Pageable pageable) {
+        User user = userJPARepository.findById(sessionUser.getId())
+                .orElseThrow(() -> new Exception404("존재 하지 않는 계정입니다"));
         List<?> myPageList = new ArrayList<>();
 
-        if (sessionUser != null) { // 로그인시
-            if (sessionUser.getRole() == 1) { // 기업
+        if (user != null) { // 로그인시
+            if (user.getRole() == 1) { // 기업
                 // Role이 1인 경우 Resume 리스트 반환
-                myPageList = noticeJPARepository.findByUser(sessionUser, pageable).stream()
+                myPageList = noticeJPARepository.findByUser(user, pageable).stream()
                         .map(notice -> new NoticeResponse.NoticeListDTO((Notice) notice))
                         .toList();
             } else {
                 // Role이 0인 경우 Notice 리스트 반환
-                myPageList = resumeJPARepository.findByUser(sessionUser, pageable).stream()
+                myPageList = resumeJPARepository.findByUser(user, pageable).stream()
                         .map(resume -> new ResumeResponse.ResumeListDTO((Resume) resume))
                         .toList();
             }
