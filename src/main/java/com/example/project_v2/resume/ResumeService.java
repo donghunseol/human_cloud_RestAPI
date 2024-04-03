@@ -95,6 +95,7 @@ public class ResumeService {
     }
 
     // 이력서 상세보기
+    @Transactional
     public ResumeResponse.DetailDTO resumeDetail(int resumeId, User sessionUser) {
         Resume resume = resumeJPARepository.findByIdJoinUser(resumeId)
                 .orElseThrow(() -> new Exception404("이력서를 찾을 수 없습니다."));
@@ -102,12 +103,14 @@ public class ResumeService {
     }
 
     // 이력서 리스트
+    @Transactional
     public List<ResumeResponse.ResumeListDTO> resumeList(Pageable pageable) {
         Page<Resume> resumeList = resumeJPARepository.findAll(pageable);
         return resumeList.stream().map(resume -> new ResumeResponse.ResumeListDTO(resume)).toList();
     }
 
     // 이력서 리스트(개인)
+    @Transactional
     public List<ResumeResponse.ResumeListDTO> resumeListByUser(User user, Pageable pageable) {
         List<Resume> resumeList = resumeJPARepository.findByUser(user, pageable);
         return resumeList.stream().map(resume -> new ResumeResponse.ResumeListDTO(resume)).toList();
