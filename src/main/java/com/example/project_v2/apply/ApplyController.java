@@ -22,14 +22,6 @@ public class ApplyController {
     @PostMapping("/api/applies/pass/{id}")
     public ResponseEntity<?> resumePass(@PathVariable Integer id, @RequestBody ApplyRequest.PassDTO passDTO) {
         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
-        if (sessionUser == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiUtil<>(401, "로그인이 필요합니다."));
-        } // 로그인 안되어 있으면 로그인 해야함
-
-        if (sessionUser.getRole() != 1) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ApiUtil<>(403, "권한이 없습니다."));
-        } // 권한(기업 로그인 했을때만 유효)이 없으면 안됨
-
         ApplyResponse.DTO respDTO = applyService.resumePass(passDTO, sessionUser);
         return ResponseEntity.ok(new ApiUtil<>(respDTO));
     }

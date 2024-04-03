@@ -2,6 +2,9 @@ package com.example.project_v2.resume;
 
 import com.example.project_v2._core.errors.exception.Exception403;
 import com.example.project_v2._core.errors.exception.Exception404;
+import com.example.project_v2.apply.Apply;
+import com.example.project_v2.apply.ApplyJPARepository;
+import com.example.project_v2.scrap.ScrapJPARepository;
 import com.example.project_v2.skill.Skill;
 import com.example.project_v2.skill.SkillJPARepository;
 import com.example.project_v2.user.SessionUser;
@@ -24,6 +27,8 @@ public class ResumeService {
     private final ResumeJPARepository resumeJPARepository;
     private final SkillJPARepository skillJPARepository;
     private final UserJPARepository userJPARepository;
+    private final ApplyJPARepository applyJPARepository;
+    private final ScrapJPARepository scrapJPARepository;
 
     @Transactional
     public ResumeResponse.DTO update(Integer resumeId, SessionUser sessionUser, ResumeRequest.UpdateDTO reqDTO) {
@@ -72,9 +77,12 @@ public class ResumeService {
                 .orElseThrow(() -> new Exception404("존재 하지 않는 계정입니다"));
         Resume resume = resumeJPARepository.findById(resumeId)
                 .orElseThrow(() -> new Exception404("이력서를 찾을 수 없습니다."));
+
         if (user.getId() != resumeId) {
             throw new Exception403("이력서를 삭제할 권한이 없습니다.");
         }
+        scrapJPARepository.deleteByResumeId(resumeId);
+        applyJPARepository.deleteByResumeId(resumeId);
         resumeJPARepository.deleteById(resumeId);
     }
 

@@ -2,6 +2,7 @@ package com.example.project_v2.scrap;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -17,4 +18,12 @@ public interface ScrapJPARepository extends JpaRepository<Scrap, Integer> {
 
     @Query("select s from Scrap s join fetch s.notice n where s.notice.id = :nid and s.user.id = :uid")
     Optional<Scrap> findByNoticeIdAndUserId(@Param("nid") int nid, @Param("uid") int uid);
+
+    @Modifying
+    @Query("delete from Scrap s where s.resume.id = :id")
+    void deleteByResumeId(@Param("id") Integer id);
+
+    @Modifying
+    @Query("delete from Scrap s where s.notice.id = :id")
+    void deleteByNoticeId(@Param("id") Integer id);
 }

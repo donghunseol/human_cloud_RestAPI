@@ -2,6 +2,8 @@ package com.example.project_v2.notice;
 
 import com.example.project_v2._core.errors.exception.Exception403;
 import com.example.project_v2._core.errors.exception.Exception404;
+import com.example.project_v2.apply.ApplyJPARepository;
+import com.example.project_v2.scrap.ScrapJPARepository;
 import com.example.project_v2.skill.Skill;
 import com.example.project_v2.skill.SkillJPARepository;
 import com.example.project_v2.user.SessionUser;
@@ -22,6 +24,8 @@ public class NoticeService {
     private final NoticeJPARepository noticeJPARepository;
     private final SkillJPARepository skillJPARepository;
     private final UserJPARepository userJPARepository;
+    private final ApplyJPARepository applyJPARepository;
+    private final ScrapJPARepository scrapJPARepository;
 
     @Transactional
     public NoticeResponse.DTO update(Integer noticeId, NoticeRequest.UpdateDTO reqDTO, SessionUser sessionUser) {
@@ -79,6 +83,9 @@ public class NoticeService {
         if (sessionUserId != notice.getUser().getId()) {
             throw new Exception403("공고를 삭제할 권한이 없습니다");
         }
+
+        scrapJPARepository.deleteByNoticeId(noticeId);
+        applyJPARepository.deleteByNoticeId(noticeId);
         noticeJPARepository.deleteById(noticeId);
     }
 
