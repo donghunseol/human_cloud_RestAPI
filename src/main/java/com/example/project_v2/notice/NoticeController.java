@@ -3,11 +3,13 @@ package com.example.project_v2.notice;
 import com.example.project_v2._core.util.ApiUtil;
 import com.example.project_v2.user.User;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,7 +48,7 @@ public class NoticeController {
 
     // 공고 작성
     @PostMapping("/api/notices")
-    public ResponseEntity<?> save(@RequestBody NoticeRequest.SaveDTO reqDTO) {
+    public ResponseEntity<?> save(@Valid @RequestBody NoticeRequest.SaveDTO reqDTO, Errors errors) {
         User sessionUser = (User) session.getAttribute("sessionUser");
         NoticeResponse.DTO respDTO = noticeService.save(reqDTO, sessionUser);
         return ResponseEntity.ok(new ApiUtil<>(respDTO));
@@ -70,7 +72,7 @@ public class NoticeController {
 
     // 공고 수정
     @PutMapping("/api/notices/{id}")
-    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody NoticeRequest.UpdateDTO reqDTO) {
+    public ResponseEntity<?> update(@PathVariable Integer id, @Valid @RequestBody NoticeRequest.UpdateDTO reqDTO, Errors errors) {
         User sessionUser = (User) session.getAttribute("sessionUser");
         reqDTO.toEntity(sessionUser);
         NoticeResponse.DTO respDTO = noticeService.update(id, reqDTO, sessionUser);
