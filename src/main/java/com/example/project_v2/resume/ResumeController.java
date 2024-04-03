@@ -1,6 +1,7 @@
 package com.example.project_v2.resume;
 
 import com.example.project_v2._core.util.ApiUtil;
+import com.example.project_v2.user.SessionUser;
 import com.example.project_v2.user.User;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -30,7 +31,7 @@ public class ResumeController {
     // 이력서 작성
     @PostMapping("/api/resumes")
     public ResponseEntity<?> save(@Valid @RequestBody ResumeRequest.SaveDTO reqDTO, Errors errors) {
-        User sessionUser = (User) session.getAttribute("sessionUser");
+        SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         ResumeResponse.DTO respDTO = resumeService.save(reqDTO, sessionUser);
         return ResponseEntity.ok(new ApiUtil<>(respDTO));
     }

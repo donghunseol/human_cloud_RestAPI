@@ -4,21 +4,26 @@ import com.example.project_v2._core.errors.exception.Exception403;
 import com.example.project_v2._core.errors.exception.Exception404;
 import com.example.project_v2.skill.Skill;
 import com.example.project_v2.skill.SkillJPARepository;
+import com.example.project_v2.user.SessionUser;
 import com.example.project_v2.user.User;
+import com.example.project_v2.user.UserJPARepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.query.sql.internal.ParameterRecognizerImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
 public class ResumeService {
     private final ResumeJPARepository resumeJPARepository;
     private final SkillJPARepository skillJPARepository;
+    private final UserJPARepository userJPARepository;
 
     @Transactional
     public ResumeResponse.DTO update(Integer resumeId, User sessionUser, ResumeRequest.UpdateDTO reqDTO) {
@@ -70,9 +75,11 @@ public class ResumeService {
     }
 
     @Transactional
-    public ResumeResponse.DTO save(ResumeRequest.SaveDTO reqDTO, User sessionUser) {
+    public ResumeResponse.DTO save(ResumeRequest.SaveDTO reqDTO, SessionUser sessionUser) {
+        User user = userJPARepository.findById(sessionUser.getId())
+                .orElseThrow(() -> new Exception404("존재하지 않는 계정입니다"));
         // 이력서 정보 저장
-        Resume resume = resumeJPARepository.save(reqDTO.toEntity(sessionUser));
+        Resume resume = resumeJPARepository.save(reqDTO.toEntity(user));
 
         // 스킬 정보를 생성
         List<Skill> skills = new ArrayList<>();
@@ -91,7 +98,7 @@ public class ResumeService {
 
         Resume newResume = resumeJPARepository.save(resume);
 
-        return new ResumeResponse.DTO(newResume, sessionUser);
+        return new ResumeResponse.DTO(newResume, user);
     }
 
     // 이력서 상세보기

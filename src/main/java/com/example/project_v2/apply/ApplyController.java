@@ -1,6 +1,8 @@
 package com.example.project_v2.apply;
 
+import com.example.project_v2._core.interceptor.LoginInterceptor;
 import com.example.project_v2._core.util.ApiUtil;
+import com.example.project_v2._core.util.JwtUtil;
 import com.example.project_v2.user.User;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;

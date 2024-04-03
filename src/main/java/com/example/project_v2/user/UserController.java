@@ -1,6 +1,7 @@
 package com.example.project_v2.user;
 
 import com.example.project_v2._core.util.ApiUtil;
+import com.example.project_v2._core.util.JwtUtil;
 import com.example.project_v2.apply.Apply;
 import com.example.project_v2.apply.ApplyJPARepository;
 import com.example.project_v2.apply.ApplyResponse;
@@ -63,9 +64,8 @@ public class UserController {
     // 로그인
     @PostMapping("/users/login")
     public ResponseEntity<?> login(@Valid @RequestBody UserRequest.LoginDTO reqDTO) {
-        SessionUser sessionUser = userService.login(reqDTO);
-        session.setAttribute("sessionUser", SessionUser.toEntity(sessionUser));
-        return ResponseEntity.ok(new ApiUtil<>(sessionUser));
+        String jwt = userService.login(reqDTO);
+        return ResponseEntity.ok().header("Authorization", "Bearer " + jwt).body(new ApiUtil<>(null)); // header 문법
     }
 
 
