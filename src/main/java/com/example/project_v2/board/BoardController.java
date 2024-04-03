@@ -25,12 +25,11 @@ public class BoardController {
 
     // 게시글 수정
     @PutMapping("/api/boards/{id}")
-    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody BoardRequest.UpdateDTO reqDTO) {
+    public ResponseEntity<?> update(@PathVariable Integer id, @Valid  @RequestBody BoardRequest.UpdateDTO reqDTO, Errors errors) {
         User sessionUser = (User) session.getAttribute("sessionUser");
         BoardResponse.DTO respDTO = boardService.update(id, sessionUser.getId(), reqDTO);
         return ResponseEntity.ok(new ApiUtil<>(respDTO));
     }
-
     // 게시글 삭제
     @DeleteMapping("/api/boards/{id}")
     public ResponseEntity<?> delete(@PathVariable int id) {
@@ -38,6 +37,7 @@ public class BoardController {
         boardService.delete(id, sessionUSer.getId());
         return ResponseEntity.ok(new ApiUtil<>(null));
     }
+
 
     // 게시글 작성
     @PostMapping("/api/boards")
