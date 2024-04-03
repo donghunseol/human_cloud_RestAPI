@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 public class ScrapRequest {
 
+
     @NoArgsConstructor
     @Data
     public static class SaveDTO {

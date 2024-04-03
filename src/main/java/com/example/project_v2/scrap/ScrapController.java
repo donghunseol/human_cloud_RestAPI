@@ -37,6 +37,7 @@ public class ScrapController {
     @PostMapping("/api/scraps/{id}")
     public ResponseEntity<?> save(@PathVariable Integer id, @RequestBody ScrapRequest.SaveDTO reqDTO) {
         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
+        System.out.println(sessionUser);
         ScrapResponse.DTO respDTO = null;
         if (sessionUser.getRole() == 0) {
             Optional<Notice> noticeOP = noticeJPARepository.findById(id);

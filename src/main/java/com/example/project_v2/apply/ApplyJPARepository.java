@@ -1,6 +1,7 @@
 package com.example.project_v2.apply;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -15,4 +16,11 @@ public interface ApplyJPARepository extends JpaRepository<Apply, Integer> {
     @Query("SELECT a FROM Apply a JOIN FETCH a.user u JOIN FETCH a.notice n JOIN FETCH a.resume r WHERE a.user.id = :userId")
     List<Apply> findAppliesByUserId(@Param("userId") Integer userId);
 
+    @Modifying
+    @Query("delete from Apply a where a.resume.id = :id")
+    void deleteByResumeId(@Param("id") Integer id);
+
+    @Modifying
+    @Query("delete from Apply a where a.notice.id = :id")
+    void deleteByNoticeId(@Param("id") Integer id);
 }
