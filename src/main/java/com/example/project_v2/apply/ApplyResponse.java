@@ -16,6 +16,7 @@ public class ApplyResponse {
         private Integer noticeUserId; // 공고 유저 번호
         private Integer applyId; // 지원 번호
         private Integer resumeId; // 이력서 번호
+        private Integer noticeId;
         private String name; // 공고 올린 회사 이름
         private String title; // 공고 타이틀
         private String deadLine; // 마감일
@@ -29,8 +30,10 @@ public class ApplyResponse {
             this.noticeUserId = apply.getNotice().getUser().getId();
             this.applyId = apply.getId();
             this.resumeId = apply.getNotice().getId();
+            this.noticeId = apply.getNotice().getId();
             this.name = apply.getUser().getName();
             this.title = apply.getNotice().getTitle();
+            this.deadLine = apply.getNotice().getDeadline();
             this.type = apply.getNotice().getType();
             this.pass = apply.getPass();
         }
