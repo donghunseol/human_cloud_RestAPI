@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class ResumeController {
 
     // 이력서 작성
     @PostMapping("/api/resumes")
-    public ResponseEntity<?> save(@Valid @RequestBody ResumeRequest.SaveDTO reqDTO) {
+    public ResponseEntity<?> save(@Valid @RequestBody ResumeRequest.SaveDTO reqDTO, Errors errors) {
         User sessionUser = (User) session.getAttribute("sessionUser");
         ResumeResponse.DTO respDTO = resumeService.save(reqDTO, sessionUser);
         return ResponseEntity.ok(new ApiUtil<>(respDTO));
@@ -44,7 +45,7 @@ public class ResumeController {
 
     // 이력서 수정
     @PutMapping("/api/resumes/{id}")
-    public ResponseEntity<?> update(@PathVariable Integer id, @Valid @RequestBody ResumeRequest.UpdateDTO reqDTO) {
+    public ResponseEntity<?> update(@PathVariable Integer id, @Valid @RequestBody ResumeRequest.UpdateDTO reqDTO, Errors errors) {
         User sessionUser = (User) session.getAttribute("sessionUser");
         reqDTO.toEntity(sessionUser);
         ResumeResponse.DTO respDTO = resumeService.update(id, sessionUser, reqDTO);
