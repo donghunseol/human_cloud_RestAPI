@@ -101,11 +101,13 @@ public class NoticeService {
         return new NoticeResponse.DTO(newNotice, sessionUser);
     }
 
+
     @Transactional(readOnly = true)
     public List<NoticeResponse.NoticeListDTO> noticeList(Pageable pageable) {
         Page<Notice> noticeList = noticeJPARepository.findAll(pageable);
         return noticeList.stream().map(notice -> new NoticeResponse.NoticeListDTO(notice)).toList();
     }
+
 
     @Transactional(readOnly = true)
     public List<NoticeResponse.NoticeListDTO> noticeListByUser(User sessionUser, Pageable pageable) {
