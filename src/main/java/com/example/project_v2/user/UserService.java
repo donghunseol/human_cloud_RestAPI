@@ -156,6 +156,7 @@ public class UserService {
         return myPageList;
     }
 
+    @Transactional
     public List<Apply> findAppliesByUserId(Integer userId){
         return applyJPARepository.findAppliesByUserId(userId);
     }

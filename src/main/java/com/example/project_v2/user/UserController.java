@@ -116,8 +116,8 @@ public class UserController {
         List<Apply> applies = userService.findAppliesByUserId(userId);
 
         // 응답 객체 구성
-        List<ApplyResponse.DTO> responseList = applies.stream()
-                .map(apply -> new ApplyResponse.DTO(apply))
+        List<ApplyResponse.UserListDTO> responseList = applies.stream()
+                .map(apply -> new ApplyResponse.UserListDTO(apply))
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(new ApiUtil<>(responseList));
