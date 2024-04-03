@@ -1,6 +1,7 @@
 package com.example.project_v2.board;
 
 import com.example.project_v2._core.util.ApiUtil;
+import com.example.project_v2.user.SessionUser;
 import com.example.project_v2.user.User;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -26,14 +27,14 @@ public class BoardController {
     // 게시글 수정
     @PutMapping("/api/boards/{id}")
     public ResponseEntity<?> update(@PathVariable Integer id, @Valid  @RequestBody BoardRequest.UpdateDTO reqDTO, Errors errors) {
-        User sessionUser = (User) session.getAttribute("sessionUser");
+        SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         BoardResponse.DTO respDTO = boardService.update(id, sessionUser.getId(), reqDTO);
         return ResponseEntity.ok(new ApiUtil<>(respDTO));
     }
     // 게시글 삭제
     @DeleteMapping("/api/boards/{id}")
     public ResponseEntity<?> delete(@PathVariable int id) {
-        User sessionUSer = (User) session.getAttribute("sessionUser");
+        SessionUser sessionUSer = (SessionUser) session.getAttribute("sessionUser");
         boardService.delete(id, sessionUSer.getId());
         return ResponseEntity.ok(new ApiUtil<>(null));
     }
@@ -42,7 +43,7 @@ public class BoardController {
     // 게시글 작성
     @PostMapping("/api/boards")
     public ResponseEntity<?> save(@Valid @RequestBody BoardRequest.SaveDTO reqDTO, Errors errors) {
-        User sessionUser = (User) session.getAttribute("sessionUser");
+        SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         // 로그인 여부 체크
         BoardResponse.DTO respDTO = boardService.save(reqDTO, sessionUser);
         return ResponseEntity.ok(new ApiUtil(respDTO));
@@ -63,7 +64,7 @@ public class BoardController {
     // 게시글 상세 보기
     @GetMapping("/boards/{id}/detail")
     public ResponseEntity<?> detail(@PathVariable Integer id) {
-        User sessionUser = (User) session.getAttribute("sessionUser");
+        SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         BoardResponse.DetailDTO respDTO = boardService.boardDetail(id, sessionUser);
         return ResponseEntity.ok(new ApiUtil<>(respDTO));
     }
