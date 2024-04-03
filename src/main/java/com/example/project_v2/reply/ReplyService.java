@@ -3,8 +3,10 @@ package com.example.project_v2.reply;
 import com.example.project_v2._core.errors.exception.Exception404;
 import com.example.project_v2.board.Board;
 import com.example.project_v2.board.BoardJPARepository;
+import com.example.project_v2.user.SessionUser;
 import com.example.project_v2.user.User;
 import com.example.project_v2._core.errors.exception.Exception403;
+import com.example.project_v2.user.UserJPARepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,16 +16,20 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReplyService {
     private final BoardJPARepository boardJPARepository;
     private final ReplyJPARepository replyJPARepository;
+    private final UserJPARepository userJPARepository;
 
     @Transactional
-    public ReplyResponse.DTO save(ReplyRequest.SaveDTO reqDTO, User sessionUser) {
+    public ReplyResponse.DTO save(ReplyRequest.SaveDTO reqDTO, SessionUser sessionUser) {
+        User user = userJPARepository.findById(sessionUser.getId())
+                .orElseThrow(() -> new Exception404("존재 하지 않는 계정입니다"));
+
         Board board = boardJPARepository.findById(reqDTO.getBoardId())
                 .orElseThrow(() -> new Exception404("없는 게시글에 댓글을 작성할 수 없어요"));
 
-        Reply reply = reqDTO.toEntity(sessionUser, board);
+        Reply reply = reqDTO.toEntity(user, board);
 
         replyJPARepository.save(reply);
-        return new ReplyResponse.DTO(reply, sessionUser, board);
+        return new ReplyResponse.DTO(reply, user, board);
     }
     @Transactional
     public void delete(int replyId,int sessionUserId){
