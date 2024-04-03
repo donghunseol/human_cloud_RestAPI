@@ -3,6 +3,7 @@ package com.example.project_v2._core.interceptor;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.example.project_v2._core.errors.exception.Exception401;
+import com.example.project_v2._core.errors.exception.Exception500;
 import com.example.project_v2._core.util.JwtUtil;
 import com.example.project_v2.user.SessionUser;
 import com.example.project_v2.user.User;
@@ -40,8 +41,7 @@ public class LoginInterceptor implements HandlerInterceptor{
             throw new Exception401("토큰이 유효하지 않습니다");
         } catch (Exception e) {
             e.printStackTrace(); // 개발 진행 시 TEST 보기
-            // throw new Exception500(e.getMessage()); // 알 수 없는 오류 이니깐 500으로 다 던져 준다.
-            throw new Exception401("비정상적인 접근입니다");
+            throw new Exception500(e.getMessage()); // 알 수 없는 오류 이니깐 500으로 다 던져 준다.
         }
     }
 }

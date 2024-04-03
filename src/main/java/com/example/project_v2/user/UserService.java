@@ -95,9 +95,11 @@ public class UserService {
     @Transactional
     public List<?> getMainPageByUserRole(SessionUser sessionUser, Pageable pageable) {
         List<?> resultList = new ArrayList<>();
+        User user = userJPARepository.findById(sessionUser.getId())
+                .orElseThrow(() -> new Exception404("존재 하지 않는 계정입니다"));
 
-        if (sessionUser != null) { // 로그인시
-            if (sessionUser.getRole() == 1) {
+        if (user != null) { // 로그인시
+            if (user.getRole() == 1) {
                 // Role이 1인 경우 Resume 리스트 반환
                 resultList = resumeJPARepository.findAll(pageable).stream()
                         .map(resume -> new ResumeResponse.ResumeListDTO((Resume) resume))
