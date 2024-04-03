@@ -36,4 +36,15 @@ public class UserResponse {
             this.createdAt = user.getCreatedAt();
         }
     }
+
+    @Data
+    public static class LoginDTO{
+        private Integer id;
+        private String username;
+
+        public LoginDTO(User user) {
+            this.id = user.getId();
+            this.username = getUsername();
+        }
+    }
 }

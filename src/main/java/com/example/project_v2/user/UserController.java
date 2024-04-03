@@ -68,7 +68,6 @@ public class UserController {
         return ResponseEntity.ok().header("Authorization", "Bearer " + jwt).body(new ApiUtil<>(null)); // header 문법
     }
 
-
     // 로그인 화면
     @GetMapping("/users/login-form")
     public String login() {
