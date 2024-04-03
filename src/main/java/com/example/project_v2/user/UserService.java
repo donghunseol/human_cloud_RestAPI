@@ -3,6 +3,7 @@ package com.example.project_v2.user;
 import com.example.project_v2._core.errors.exception.Exception400;
 import com.example.project_v2._core.errors.exception.Exception401;
 import com.example.project_v2._core.errors.exception.Exception404;
+import com.example.project_v2._core.util.JwtUtil;
 import com.example.project_v2.apply.Apply;
 import com.example.project_v2.apply.ApplyJPARepository;
 import com.example.project_v2.notice.Notice;
@@ -50,10 +51,14 @@ public class UserService {
         return new UserResponse.DTO(user);
     }
 
-    public SessionUser login(UserRequest.LoginDTO reqDTO) {
+    public String login(UserRequest.LoginDTO reqDTO) {
         User user = userJPARepository.findByUsernameAndPassword(reqDTO.getUsername(), reqDTO.getPassword())
                 .orElseThrow(() -> new Exception401("인증되지 않았습니다"));
-        return new SessionUser(user);
+
+        String jwt = JwtUtil.create(user);
+        JwtUtil.verify(jwt);
+
+        return jwt;
     }
 
     @Transactional

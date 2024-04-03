@@ -1,5 +1,6 @@
 package com.example.project_v2.user;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.sql.Timestamp;
@@ -16,6 +17,20 @@ public class SessionUser {
     private String image; // 이미지 경로만 저장
     private Integer role;
     private Timestamp createdAt;
+
+    @Builder
+    public SessionUser(Integer id, String username, String name, String tel, String birth, String email, String address, String image, Integer role, Timestamp createdAt) {
+        this.id = id;
+        this.username = username;
+        this.name = name;
+        this.tel = tel;
+        this.birth = birth;
+        this.email = email;
+        this.address = address;
+        this.image = image;
+        this.role = role;
+        this.createdAt = createdAt;
+    }
 
     public SessionUser(User user) {
         this.id = user.getId();
