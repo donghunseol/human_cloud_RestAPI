@@ -25,7 +25,7 @@ public class BoardService {
     @Transactional
     public BoardResponse.DTO update(Integer boardId, Integer sessionUserId, BoardRequest.UpdateDTO reqDTO) {
         Board board = boardJPARepository.findById(boardId)
-                .orElseThrow(() -> new Exception404("게시글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new Exception404("게시글을 찾을 수 없습니다"));
 
         if (sessionUserId != board.getUser().getId()) {
             throw new Exception403("게시글을 수정할 권한이 없습니다.");
