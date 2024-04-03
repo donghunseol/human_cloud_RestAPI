@@ -1,8 +1,9 @@
 package com.example.project_v2.user;
 
-import com.example.project_v2._core.errors.exception.Exception401;
-import com.example.project_v2._core.errors.exception.Exception403;
 import com.example.project_v2._core.util.ApiUtil;
+import com.example.project_v2.apply.Apply;
+import com.example.project_v2.apply.ApplyJPARepository;
+import com.example.project_v2.apply.ApplyResponse;
 import com.example.project_v2.scrap.ScrapResponse;
 import com.example.project_v2.scrap.ScrapService;
 import jakarta.servlet.http.HttpSession;
@@ -14,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -109,10 +110,19 @@ public class UserController {
     }
 
     // 마이 페이지 - 지원한 공고 (공고 출력 / 이력서 신청 여부)
-    @GetMapping("/api/myPages/selectList")
-    public ResponseEntity<?> myPageList() {
-        return ResponseEntity.ok(new ApiUtil<>(null));
+    @GetMapping("/api/myPages/{id}/selectList")
+    public ResponseEntity<?> myPageList(@PathVariable("id") Integer userId) {
+        // 사용자가 지원한 공고 정보 조회
+        List<Apply> applies = userService.findAppliesByUserId(userId);
+
+        // 응답 객체 구성
+        List<ApplyResponse.DTO> responseList = applies.stream()
+                .map(apply -> new ApplyResponse.DTO(apply))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(new ApiUtil<>(responseList));
     }
+
 
     // 회원가입(username) 중복 확인
     @GetMapping("/api/username-same-checks")

@@ -54,7 +54,7 @@ public class NoticeService {
         return new NoticeResponse.DTO(notice, sessionUser);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public NoticeResponse.DetailDTO noticeDetail(Integer noticeId, User sessionUser) {
         Notice notice = noticeJPARepository.findByIdJoinUser(noticeId)
                 .orElseThrow(() -> new Exception404("공고 글을 찾을 수 없음"));
@@ -101,13 +101,15 @@ public class NoticeService {
         return new NoticeResponse.DTO(newNotice, sessionUser);
     }
 
-    @Transactional
+
+    @Transactional(readOnly = true)
     public List<NoticeResponse.NoticeListDTO> noticeList(Pageable pageable) {
         Page<Notice> noticeList = noticeJPARepository.findAll(pageable);
         return noticeList.stream().map(notice -> new NoticeResponse.NoticeListDTO(notice)).toList();
     }
 
-    @Transactional
+
+    @Transactional(readOnly = true)
     public List<NoticeResponse.NoticeListDTO> noticeListByUser(User sessionUser, Pageable pageable) {
         List<Notice> noticeList = noticeJPARepository.findByUser(sessionUser, pageable);
         return noticeList.stream().map(notice -> new NoticeResponse.NoticeListDTO(notice)).toList();

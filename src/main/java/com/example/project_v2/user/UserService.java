@@ -3,6 +3,8 @@ package com.example.project_v2.user;
 import com.example.project_v2._core.errors.exception.Exception400;
 import com.example.project_v2._core.errors.exception.Exception401;
 import com.example.project_v2._core.errors.exception.Exception404;
+import com.example.project_v2.apply.Apply;
+import com.example.project_v2.apply.ApplyJPARepository;
 import com.example.project_v2.notice.Notice;
 import com.example.project_v2.notice.NoticeJPARepository;
 import com.example.project_v2.notice.NoticeResponse;
@@ -27,6 +29,7 @@ public class UserService {
     private final UserJPARepository userJPARepository;
     private final ResumeJPARepository resumeJPARepository;
     private final NoticeJPARepository noticeJPARepository;
+    private final ApplyJPARepository applyJPARepository;
 
     public User sameCheck(String username) {
         User user = userJPARepository.findByUsername(username)
@@ -154,5 +157,9 @@ public class UserService {
             throw new Exception401("회원정보를 찾을 수 없습니다.");
         }
         return myPageList;
+    }
+
+    public List<Apply> findAppliesByUserId(Integer userId){
+        return applyJPARepository.findAppliesByUserId(userId);
     }
 }

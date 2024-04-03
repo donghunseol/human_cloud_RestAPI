@@ -2,6 +2,7 @@ package com.example.project_v2.notice;
 
 import com.example.project_v2.skill.Skill;
 import com.example.project_v2.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
@@ -21,6 +22,7 @@ public class Notice {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "user_id")
     private User user;
@@ -44,6 +46,7 @@ public class Notice {
     @CreationTimestamp
     private Timestamp createdAt;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "notice", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Skill> skills = new ArrayList<>();
 
