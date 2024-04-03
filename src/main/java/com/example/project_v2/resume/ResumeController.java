@@ -3,6 +3,7 @@ package com.example.project_v2.resume;
 import com.example.project_v2._core.util.ApiUtil;
 import com.example.project_v2.user.User;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,7 +28,7 @@ public class ResumeController {
 
     // 이력서 작성
     @PostMapping("/api/resumes")
-    public ResponseEntity<?> save(@RequestBody ResumeRequest.SaveDTO reqDTO) {
+    public ResponseEntity<?> save(@Valid @RequestBody ResumeRequest.SaveDTO reqDTO) {
         User sessionUser = (User) session.getAttribute("sessionUser");
         ResumeResponse.DTO respDTO = resumeService.save(reqDTO, sessionUser);
         return ResponseEntity.ok(new ApiUtil<>(respDTO));
@@ -43,7 +44,7 @@ public class ResumeController {
 
     // 이력서 수정
     @PutMapping("/api/resumes/{id}")
-    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody ResumeRequest.UpdateDTO reqDTO) {
+    public ResponseEntity<?> update(@PathVariable Integer id, @Valid @RequestBody ResumeRequest.UpdateDTO reqDTO) {
         User sessionUser = (User) session.getAttribute("sessionUser");
         reqDTO.toEntity(sessionUser);
         ResumeResponse.DTO respDTO = resumeService.update(id, sessionUser, reqDTO);
