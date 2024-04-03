@@ -4,7 +4,9 @@ import com.example.project_v2._core.errors.exception.Exception403;
 import com.example.project_v2._core.errors.exception.Exception404;
 import com.example.project_v2.skill.Skill;
 import com.example.project_v2.skill.SkillJPARepository;
+import com.example.project_v2.user.SessionUser;
 import com.example.project_v2.user.User;
+import com.example.project_v2.user.UserJPARepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,9 +21,13 @@ import java.util.List;
 public class NoticeService {
     private final NoticeJPARepository noticeJPARepository;
     private final SkillJPARepository skillJPARepository;
+    private final UserJPARepository userJPARepository;
 
     @Transactional
-    public NoticeResponse.DTO update(Integer noticeId, NoticeRequest.UpdateDTO reqDTO, User sessionUser) {
+    public NoticeResponse.DTO update(Integer noticeId, NoticeRequest.UpdateDTO reqDTO, SessionUser sessionUser) {
+        User user = userJPARepository.findById(sessionUser.getId())
+                .orElseThrow(() -> new Exception404("존재 하지 않는 계정입니다"));
+
         Notice notice = noticeJPARepository.findById(noticeId)
                 .orElseThrow(() -> new Exception404("존재하지 않는 공고입니다"));
         notice.setTitle(reqDTO.getTitle());
@@ -51,15 +57,18 @@ public class NoticeService {
         skills = skillJPARepository.saveAll(skills);
         notice.setSkills(skills);
 
-        return new NoticeResponse.DTO(notice, sessionUser);
+        return new NoticeResponse.DTO(notice, user);
     }
 
     @Transactional(readOnly = true)
-    public NoticeResponse.DetailDTO noticeDetail(Integer noticeId, User sessionUser) {
+    public NoticeResponse.DetailDTO noticeDetail(Integer noticeId, SessionUser sessionUser) {
+        User user = userJPARepository.findById(sessionUser.getId())
+                .orElseThrow(() -> new Exception404("존재 하지 않는 계정입니다"));
+
         Notice notice = noticeJPARepository.findByIdJoinUser(noticeId)
                 .orElseThrow(() -> new Exception404("공고 글을 찾을 수 없음"));
 
-        return new NoticeResponse.DetailDTO(notice, sessionUser);
+        return new NoticeResponse.DetailDTO(notice, user);
     }
 
     @Transactional
@@ -74,8 +83,10 @@ public class NoticeService {
     }
 
     @Transactional
-    public NoticeResponse.DTO save(NoticeRequest.SaveDTO reqDTO, User sessionUser) {
-        Notice notice = noticeJPARepository.save(reqDTO.toEntity(sessionUser));
+    public NoticeResponse.DTO save(NoticeRequest.SaveDTO reqDTO, SessionUser sessionUser) {
+        User user = userJPARepository.findById(sessionUser.getId())
+                .orElseThrow(() -> new Exception404("존재 하지 않는 계정입니다"));
+        Notice notice = noticeJPARepository.save(reqDTO.toEntity(user));
 
         // 1번 방법 -> skill 로 안받으면 reqDTO 의 id 값이 null 로 json이 뜬다
 //        reqDTO.getSkills().forEach(skill -> {
@@ -98,7 +109,7 @@ public class NoticeService {
 
         Notice newNotice = noticeJPARepository.save(notice);
 
-        return new NoticeResponse.DTO(newNotice, sessionUser);
+        return new NoticeResponse.DTO(newNotice, user);
     }
 
 
@@ -110,8 +121,10 @@ public class NoticeService {
 
 
     @Transactional
-    public List<NoticeResponse.NoticeListDTO> noticeListByUser(User sessionUser, Pageable pageable) {
-        List<Notice> noticeList = noticeJPARepository.findByUser(sessionUser, pageable);
+    public List<NoticeResponse.NoticeListDTO> noticeListByUser(SessionUser sessionUser, Pageable pageable) {
+        User user = userJPARepository.findById(sessionUser.getId())
+                .orElseThrow(() -> new Exception404("존재 하지 않는 계정입니다"));
+        List<Notice> noticeList = noticeJPARepository.findByUser(user, pageable);
         return noticeList.stream().map(notice -> new NoticeResponse.NoticeListDTO(notice)).toList();
     }
 }
