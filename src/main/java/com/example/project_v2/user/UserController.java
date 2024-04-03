@@ -1,6 +1,10 @@
 package com.example.project_v2.user;
 
+import com.example.project_v2._core.errors.exception.Exception401;
+import com.example.project_v2._core.errors.exception.Exception403;
 import com.example.project_v2._core.util.ApiUtil;
+import com.example.project_v2.scrap.ScrapResponse;
+import com.example.project_v2.scrap.ScrapService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +19,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RestController
 public class UserController {
+    private final ScrapService scrapService;
     private final UserService userService;
     private final HttpSession session;
 
@@ -120,15 +125,20 @@ public class UserController {
         }
     }
 
-    // 스크랩 여부 확인
+    // 스크랩 리스트
     @GetMapping("/api/scraps/{id}")
-    public ResponseEntity<?> scrapList(@PathVariable Integer id) {
+    public ResponseEntity<?> scrapList(@RequestParam(defaultValue = "0") int page,
+                                       @RequestParam(defaultValue = "10") int size,
+                                       @RequestParam(defaultValue = "id") String sortBy,
+                                       @RequestParam(defaultValue = "desc") String direction,
+                                       @PathVariable Integer id) {
         User sessionUser = (User) session.getAttribute("sessionUser");
 
-        //List<ScrapResponse.ScrapDTO> scrapList= scrapRepository.findByIdList(id, user.getRole());
-        //session.setAttribute("scrapList", scrapList);
 
-        return ResponseEntity.ok(new ApiUtil<>(null));
+        Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        List<ScrapResponse.ScrapListDTO> respDTO = scrapService.scrapList(sessionUser.getId(), id, pageable);
+        return ResponseEntity.ok(new ApiUtil<>(respDTO));
     }
 }
 

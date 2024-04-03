@@ -18,9 +18,9 @@ public class ScrapResponse {
         private String title; // 공고 제목
         private String type; // 고용 형태
 
-        public ScrapListDTO(Scrap scrap, User sessionUser) {
+        public ScrapListDTO(Scrap scrap, Integer sessionUserId) {
             this.id = scrap.getId();
-            this.userId = sessionUser.getId();
+            this.userId = sessionUserId;
             this.noticeId = scrap.getNotice().getId();
             this.noticeUsername = scrap.getNotice().getUser().getUsername();
             this.deadline = scrap.getNotice().getDeadline();
