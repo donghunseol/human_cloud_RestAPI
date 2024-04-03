@@ -2,6 +2,7 @@ package com.example.project_v2.apply;
 
 import com.example.project_v2._core.errors.exception.Exception403;
 import com.example.project_v2._core.errors.exception.Exception404;
+import com.example.project_v2._core.util.ApiUtil;
 import com.example.project_v2.notice.Notice;
 import com.example.project_v2.notice.NoticeJPARepository;
 import com.example.project_v2.resume.Resume;
@@ -10,6 +11,8 @@ import com.example.project_v2.user.SessionUser;
 import com.example.project_v2.user.User;
 import com.example.project_v2.user.UserJPARepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,8 +49,14 @@ public class ApplyService {
                 .orElseThrow(() -> new Exception404("지원 번호를 찾을 수 없습니다"));
 
         if (apply.getNotice() == null) {
-            throw new Exception404("해당 공고가 없습니다.");
+            throw new Exception404("해당 공고가 없습니다");
         }
+
+        if (user.getRole() != 1) {
+            throw new Exception403("권한이 없습니다");
+        } // 권한(기업 로그인 했을때만 유효)이 없으면 안됨
+
+
         apply.setPass(passDTO.isPass());
         Apply passApply = applyJPARepository.save(apply);
         return new ApplyResponse.DTO(passApply);
