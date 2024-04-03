@@ -7,11 +7,13 @@ import com.example.project_v2.apply.ApplyResponse;
 import com.example.project_v2.scrap.ScrapResponse;
 import com.example.project_v2.scrap.ScrapService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,7 +48,7 @@ public class UserController {
 
     // 회원 가입
     @PostMapping("/users/join")
-    public ResponseEntity<?> join(@RequestBody UserRequest.JoinDTO reqDTO) {
+    public ResponseEntity<?> join(@Valid @RequestBody UserRequest.JoinDTO reqDTO, Errors errors) {
         UserResponse.DTO respDTO = userService.join(reqDTO);
         return ResponseEntity.ok(new ApiUtil<>(respDTO));
     }
@@ -59,7 +61,7 @@ public class UserController {
 
     // 로그인
     @PostMapping("/users/login")
-    public ResponseEntity<?> login(@RequestBody UserRequest.LoginDTO reqDTO) {
+    public ResponseEntity<?> login(@Valid @RequestBody UserRequest.LoginDTO reqDTO) {
         SessionUser sessionUser = userService.login(reqDTO);
         session.setAttribute("sessionUser", SessionUser.toEntity(sessionUser));
         return ResponseEntity.ok(new ApiUtil<>(sessionUser));
@@ -74,7 +76,7 @@ public class UserController {
 
     // 회원 정보 수정
     @PutMapping("/api/users/{id}")
-    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody UserRequest.UpdateDTO reqDTO) {
+    public ResponseEntity<?> update(@PathVariable Integer id, @Valid @RequestBody UserRequest.UpdateDTO reqDTO) {
         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         SessionUser newSessionUser = userService.update(sessionUser.getId(), reqDTO);
         session.setAttribute("sessionUser", newSessionUser);
