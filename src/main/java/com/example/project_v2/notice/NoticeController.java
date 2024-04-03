@@ -35,7 +35,7 @@ public class NoticeController {
     }
 
     // 공고 목록 보기
-    @GetMapping("/api/notices")
+    @GetMapping("/notices")
     public ResponseEntity<?> index(@RequestParam(defaultValue = "0") int page,
                                    @RequestParam(defaultValue = "10") int size,
                                    @RequestParam(defaultValue = "id") String sortBy,
@@ -55,7 +55,7 @@ public class NoticeController {
     }
 
     // 공고 상세 보기
-    @GetMapping("/api/notices/{id}/detail")
+    @GetMapping("/notices/{id}/detail")
     public ResponseEntity<?> detail(@PathVariable Integer id) {
         User sessionUser = (User) session.getAttribute("sessionUser");
         NoticeResponse.DetailDTO respDTO = noticeService.noticeDetail(id, sessionUser);

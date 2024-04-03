@@ -43,6 +43,7 @@ public class UserController {
         } else {
             mainPageList = userService.getMainPageByUserRole(sessionUser, pageable);
         }
+
         return ResponseEntity.ok(new ApiUtil<>(mainPageList));
     }
 

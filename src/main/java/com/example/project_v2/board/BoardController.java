@@ -61,7 +61,7 @@ public class BoardController {
     }
 
     // 게시글 상세 보기
-    @GetMapping("/api/boards/{id}/detail")
+    @GetMapping("/boards/{id}/detail")
     public ResponseEntity<?> detail(@PathVariable Integer id) {
         User sessionUser = (User) session.getAttribute("sessionUser");
         BoardResponse.DetailDTO respDTO = boardService.boardDetail(id, sessionUser);
