@@ -8,8 +8,11 @@ import com.example.project_v2.resume.Resume;
 import com.example.project_v2.user.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -17,10 +20,14 @@ import java.util.Optional;
 public class ScrapService {
     private final ScrapJPARepository scrapJPARepository;
 
-    public Scrap scrapList(User sessionUser){
-        Scrap scrap = scrapJPARepository.findByIdList(sessionUser.getId())
-                .orElseThrow(() -> new Exception404("스크랩이 존재하지 않습니다"));
-        return scrap;
+    public List<ScrapResponse.ScrapListDTO> scrapList(Integer sessionUserId, Integer id, Pageable pageable){
+        if(sessionUserId == null){
+            throw new Exception401("로그인을 먼저 해주세요");
+        } else if (id != sessionUserId) {
+            throw new Exception403("스크랩 리스트 조회할 권한이 없습니다.");
+        }
+        List<Scrap> scrapList = scrapJPARepository.findById(sessionUserId, pageable);
+        return scrapList.stream().map(scrap -> new ScrapResponse.ScrapListDTO(scrap, sessionUserId)).toList();
     }
 
     @Transactional
