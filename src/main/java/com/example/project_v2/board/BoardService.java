@@ -5,7 +5,6 @@ import com.example.project_v2._core.errors.exception.Exception404;
 import com.example.project_v2.user.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -61,8 +60,10 @@ public class BoardService {
         return new BoardResponse.DetailDTO(board, sessionUser);
     }
 
+
+    // 게시글 목록 보기
     public List<BoardResponse.MainDTO> boardMain(Pageable pageable) {
-        Page<Board> boardList = boardJPARepository.findAll(pageable);
+        List<Board> boardList = boardJPARepository.findAllWithUser();
         return boardList.stream().map(board -> new BoardResponse.MainDTO(board)).toList();
     }
 

@@ -20,16 +20,18 @@ public class ApplyService {
     private final NoticeJPARepository noticeJPARepository;
     private final ResumeJPARepository resumeJPARepository;
 
+
+    // 지원 취소
     @Transactional
     public void delete(Integer applyId, Integer sessionUserId){
         Apply apply  = applyJPARepository.findById(applyId)
                 .orElseThrow(() -> new Exception404("지원번호 찾을 수 없음"));
 
         if (apply.getUser().getId().equals(sessionUserId)) {
-            applyJPARepository.deleteById(applyId);
-        } else {
-            throw new Exception403("삭제할 권한이 없습니다.");
+            throw new Exception403("지원 취소 권한이 없습니다.");
+
         }
+        applyJPARepository.save(apply);
     }
 
     // 합격, 불합격
@@ -37,6 +39,10 @@ public class ApplyService {
     public ApplyResponse.DTO resumePass(ApplyRequest.PassDTO passDTO, User user){
         Apply apply = applyJPARepository.findById(passDTO.getId())
                 .orElseThrow(() -> new Exception404("지원 번호를 찾을 수 없습니다"));
+
+        if (apply.getNotice() == null){
+            throw new Exception404("해당 공고가 없습니다.");
+        }
         apply.setPass(passDTO.isPass());
         Apply passApply = applyJPARepository.save(apply);
         return new ApplyResponse.DTO(passApply);
