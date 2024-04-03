@@ -3,6 +3,7 @@ package com.example.project_v2.apply;
 import com.example.project_v2._core.interceptor.LoginInterceptor;
 import com.example.project_v2._core.util.ApiUtil;
 import com.example.project_v2._core.util.JwtUtil;
+import com.example.project_v2.user.SessionUser;
 import com.example.project_v2.user.User;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class ApplyController {
     // 합격 불합격
     @PostMapping("/api/applies/pass/{id}")
     public ResponseEntity<?> resumePass(@PathVariable Integer id, @RequestBody ApplyRequest.PassDTO passDTO) {
-        User sessionUser = (User) session.getAttribute("sessionUser");
+        SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         if (sessionUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiUtil<>(401, "로그인이 필요합니다."));
         } // 로그인 안되어 있으면 로그인 해야함
@@ -36,7 +37,7 @@ public class ApplyController {
     // 지원할 이력서 선택
     @GetMapping("/api/applies/{id}/resume-save")
     public ResponseEntity<?> resumeSave(@PathVariable Integer id) {
-        User sessionUser = (User) session.getAttribute("sessionUser");
+        SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         ApplyResponse.SelectResumeDTO selectResumeDTO = applyService.findById(id, sessionUser);
         return ResponseEntity.ok(new ApiUtil<>(selectResumeDTO));
     }
@@ -44,7 +45,7 @@ public class ApplyController {
     // 지원 취소
     @DeleteMapping("/api/applies/{id}/delete")
     public ResponseEntity<?> delete(@PathVariable Integer id) {
-        User sessionUser = (User) session.getAttribute("sessionUser");
+        SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         applyService.delete(id, sessionUser.getId());
         return ResponseEntity.ok(new ApiUtil<>(null));
     }
@@ -52,7 +53,7 @@ public class ApplyController {
     // 지원하기
     @PostMapping("/api/applies/{id}")
     public ResponseEntity<?> save(@RequestBody ApplyRequest.SaveDTO reqDTO) {
-        User sessionUser = (User) session.getAttribute("sessionUser");
+        SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         ApplyResponse.DTO respDTO = applyService.save(reqDTO, sessionUser);
         return ResponseEntity.ok(new ApiUtil<>(respDTO));
     }

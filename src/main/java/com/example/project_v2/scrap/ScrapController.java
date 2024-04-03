@@ -7,6 +7,7 @@ import com.example.project_v2.notice.NoticeService;
 import com.example.project_v2.resume.Resume;
 import com.example.project_v2.resume.ResumeJPARepository;
 import com.example.project_v2.resume.ResumeService;
+import com.example.project_v2.user.SessionUser;
 import com.example.project_v2.user.User;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class ScrapController {
     // 스크랩 삭제
     @DeleteMapping("/api/scraps/{id}")
     public ResponseEntity<?> delete(@PathVariable Integer id) {
-        User sessionUser = (User) session.getAttribute("sessionUser");
+        SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         scrapService.delete(id, sessionUser);
         return ResponseEntity.ok(new ApiUtil<>(null));
     }
@@ -35,7 +36,7 @@ public class ScrapController {
     // 스크랩 등록
     @PostMapping("/api/scraps/{id}")
     public ResponseEntity<?> save(@PathVariable Integer id, @RequestBody ScrapRequest.SaveDTO reqDTO) {
-        User sessionUser = (User) session.getAttribute("sessionUser");
+        SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         ScrapResponse.DTO respDTO = null;
         if (sessionUser.getRole() == 0) {
             Optional<Notice> noticeOP = noticeJPARepository.findById(id);
