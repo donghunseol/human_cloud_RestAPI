@@ -54,6 +54,7 @@ public class BoardService {
     }
 
     // 게시글 상세보기
+    @Transactional
     public BoardResponse.DetailDTO boardDetail(int boardId, User sessionUser) {
         Board board = boardJPARepository.findByIdJoinUser(boardId)
                 .orElseThrow(() -> new Exception404("게시글을 찾을 수 없습니다."));
@@ -62,6 +63,7 @@ public class BoardService {
 
 
     // 게시글 목록 보기
+    @Transactional
     public List<BoardResponse.MainDTO> boardMain(Pageable pageable) {
         List<Board> boardList = boardJPARepository.findAllWithUser();
         return boardList.stream().map(board -> new BoardResponse.MainDTO(board)).toList();
