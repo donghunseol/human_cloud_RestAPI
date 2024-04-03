@@ -84,6 +84,7 @@ public class UserService {
     }
 
     // 사용자의 role 에 따라 메인페이지 화면 변경
+    @Transactional
     public List<?> getMainPageByUserRole(User sessionUser, Pageable pageable) {
         List<?> resultList = new ArrayList<>();
 
@@ -108,6 +109,7 @@ public class UserService {
     }
 
     // 메인페이지 스킬 검색 서비스
+    @Transactional
     public List<?> getMainPageByUserRoleAndSkill(User sessionUser, String skillName, Pageable pageable) {
         List<?> resultList = new ArrayList<>();
 
@@ -132,6 +134,7 @@ public class UserService {
     }
 
     // 마이페이지
+    @Transactional
     public List<?> getMyPage(User sessionUser, Pageable pageable) {
         List<?> myPageList = new ArrayList<>();
 
