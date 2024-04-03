@@ -47,8 +47,7 @@ public class ResumeController {
     // 이력서 수정
     @PutMapping("/api/resumes/{id}")
     public ResponseEntity<?> update(@PathVariable Integer id, @Valid @RequestBody ResumeRequest.UpdateDTO reqDTO, Errors errors) {
-        User sessionUser = (User) session.getAttribute("sessionUser");
-        reqDTO.toEntity(sessionUser);
+        SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         ResumeResponse.DTO respDTO = resumeService.update(id, sessionUser, reqDTO);
         return ResponseEntity.ok(new ApiUtil<>(respDTO));
     }
@@ -56,7 +55,7 @@ public class ResumeController {
     // 이력서 상세 보기
     @GetMapping("/api/resumes/{id}/detail")
     public ResponseEntity<?> detail(@PathVariable Integer id) {
-        User sessionUser = (User) session.getAttribute("sessionUser");
+        SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         ResumeResponse.DetailDTO respDTO = resumeService.resumeDetail(id, sessionUser);
         return ResponseEntity.ok(new ApiUtil<>(respDTO));
     }
@@ -79,7 +78,7 @@ public class ResumeController {
                                           @RequestParam(defaultValue = "10") int size,
                                           @RequestParam(defaultValue = "id") String sortBy,
                                           @RequestParam(defaultValue = "desc") String direction) {
-        User sessionUser = (User) session.getAttribute("sessionUser");
+        SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
         List<ResumeResponse.ResumeListDTO> respDTO = resumeService.resumeListByUser(sessionUser, pageable);

@@ -26,7 +26,9 @@ public class ResumeService {
     private final UserJPARepository userJPARepository;
 
     @Transactional
-    public ResumeResponse.DTO update(Integer resumeId, User sessionUser, ResumeRequest.UpdateDTO reqDTO) {
+    public ResumeResponse.DTO update(Integer resumeId, SessionUser sessionUser, ResumeRequest.UpdateDTO reqDTO) {
+        User user = userJPARepository.findById(sessionUser.getId())
+                .orElseThrow(() -> new Exception404("존재 하지 않는 계정입니다"));
         Resume resume = resumeJPARepository.findById(resumeId)
                 .orElseThrow(() -> new Exception404("이력서를 찾을 수 없습니다."));
 
@@ -61,7 +63,7 @@ public class ResumeService {
         skills = skillJPARepository.saveAll(skills);
         resume.setSkills(skills);
 
-        return new ResumeResponse.DTO(resume, sessionUser);
+        return new ResumeResponse.DTO(resume, user);
     }
 
     @Transactional
@@ -103,10 +105,12 @@ public class ResumeService {
 
     // 이력서 상세보기
     @Transactional
-    public ResumeResponse.DetailDTO resumeDetail(int resumeId, User sessionUser) {
+    public ResumeResponse.DetailDTO resumeDetail(int resumeId, SessionUser sessionUser) {
+        User user = userJPARepository.findById(sessionUser.getId())
+                .orElseThrow(() -> new Exception404("존재 하지 않는 계정입니다"));
         Resume resume = resumeJPARepository.findByIdJoinUser(resumeId)
                 .orElseThrow(() -> new Exception404("이력서를 찾을 수 없습니다."));
-        return new ResumeResponse.DetailDTO(resume, sessionUser);
+        return new ResumeResponse.DetailDTO(resume, user);
     }
 
     // 이력서 리스트
@@ -118,7 +122,9 @@ public class ResumeService {
 
     // 이력서 리스트(개인)
     @Transactional
-    public List<ResumeResponse.ResumeListDTO> resumeListByUser(User user, Pageable pageable) {
+    public List<ResumeResponse.ResumeListDTO> resumeListByUser(SessionUser sessionUser, Pageable pageable) {
+        User user = userJPARepository.findById(sessionUser.getId())
+                .orElseThrow(() -> new Exception404("존재 하지 않는 계정입니다"));
         List<Resume> resumeList = resumeJPARepository.findByUser(user, pageable);
         return resumeList.stream().map(resume -> new ResumeResponse.ResumeListDTO(resume)).toList();
     }
