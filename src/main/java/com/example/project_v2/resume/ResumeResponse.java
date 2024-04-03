@@ -2,12 +2,41 @@ package com.example.project_v2.resume;
 
 import com.example.project_v2.skill.Skill;
 import com.example.project_v2.user.User;
+import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ResumeResponse {
+
+    @Data
+    public static class DTO{
+        private Integer id;
+        private Integer userId;
+        private String title;
+        private String career;
+        private String license;
+        private String education;
+        private String major;
+
+        private List<SkillDTO> skills = new ArrayList<>();
+
+        public DTO(Resume resume, User sessionUser) {
+            this.id = resume.getId();
+            this.userId = sessionUser.getId();
+            this.title = resume.getTitle();
+            this.career = resume.getCareer();
+            this.license = resume.getLicense();
+            this.education = resume.getEducation();
+            this.major = resume.getMajor();
+
+            this.skills = resume.getSkills().stream().map(skill -> new SkillDTO(skill)).toList();
+        }
+    }
+
     @Data
     public static class DetailDTO {
         private Integer id;

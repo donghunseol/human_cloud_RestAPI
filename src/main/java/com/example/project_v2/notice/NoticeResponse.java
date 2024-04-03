@@ -10,6 +10,33 @@ import java.util.List;
 public class NoticeResponse {
 
     @Data
+    public static class DTO{
+        private Integer id;
+        private Integer userId;
+        private String title;
+        private String type;
+        private String field;
+        private String workPlace;
+        private String content;
+        private String deadline;
+
+        private List<SkillDTO> skills = new ArrayList<>();
+
+        public DTO(Notice notice, User sessionUser) {
+            this.id = notice.getId();
+            this.userId = sessionUser.getId();
+            this.title = notice.getTitle();
+            this.type = notice.getType();
+            this.field = notice.getField();
+            this.workPlace = notice.getWorkPlace();
+            this.content = notice.getContent();
+            this.deadline = notice.getDeadline();
+
+            this.skills =  notice.getSkills().stream().map(skill -> new SkillDTO(skill)).toList();
+        }
+    }
+
+    @Data
     public static class NoticeListDTO{
         private Integer id;
         private String username;

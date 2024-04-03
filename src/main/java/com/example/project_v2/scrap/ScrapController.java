@@ -36,20 +36,20 @@ public class ScrapController {
     @PostMapping("/api/scraps/{id}")
     public ResponseEntity<?> save(@PathVariable Integer id, @RequestBody ScrapRequest.SaveDTO reqDTO) {
         User sessionUser = (User) session.getAttribute("sessionUser");
-        Scrap scrap = null;
-        if(sessionUser.getRole()==0){
+        ScrapResponse.DTO respDTO = null;
+        if (sessionUser.getRole() == 0) {
             Optional<Notice> noticeOP = noticeJPARepository.findById(id);
-            if(noticeOP.isPresent()){
+            if (noticeOP.isPresent()) {
                 Notice notice = noticeOP.get();
-                scrap = scrapService.save(notice, reqDTO, sessionUser);
+                respDTO = scrapService.save(notice, reqDTO, sessionUser);
             }
-        }else{
+        } else {
             Optional<Resume> resumeOP = resumeJPARepository.findById(id);
-            if(resumeOP.isPresent()){
+            if (resumeOP.isPresent()) {
                 Resume resume = resumeOP.get();
-                scrap = scrapService.save(resume, reqDTO, sessionUser);
+                respDTO = scrapService.save(resume, reqDTO, sessionUser);
             }
         }
-        return ResponseEntity.ok(new ApiUtil<>(null));
+        return ResponseEntity.ok(new ApiUtil<>(respDTO));
     }
 }

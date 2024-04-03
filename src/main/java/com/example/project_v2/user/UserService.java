@@ -1,7 +1,10 @@
 package com.example.project_v2.user;
 
+import com.example.project_v2._core.errors.exception.Exception400;
 import com.example.project_v2._core.errors.exception.Exception401;
 import com.example.project_v2._core.errors.exception.Exception404;
+import com.example.project_v2.apply.Apply;
+import com.example.project_v2.apply.ApplyJPARepository;
 import com.example.project_v2.notice.Notice;
 import com.example.project_v2.notice.NoticeJPARepository;
 import com.example.project_v2.notice.NoticeResponse;
@@ -9,7 +12,7 @@ import com.example.project_v2.resume.Resume;
 import com.example.project_v2.resume.ResumeJPARepository;
 import com.example.project_v2.resume.ResumeResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,10 +20,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -29,6 +29,7 @@ public class UserService {
     private final UserJPARepository userJPARepository;
     private final ResumeJPARepository resumeJPARepository;
     private final NoticeJPARepository noticeJPARepository;
+    private final ApplyJPARepository applyJPARepository;
 
     public User sameCheck(String username) {
         User user = userJPARepository.findByUsername(username)
@@ -37,18 +38,26 @@ public class UserService {
     }
 
     @Transactional
-    public User join(UserRequest.JoinDTO reqDTO) {
-        return userJPARepository.save(reqDTO.toEntity());
+    public UserResponse.DTO join(UserRequest.JoinDTO reqDTO) {
+        Optional<User> userOP = userJPARepository.findByUsername(reqDTO.getUsername());
+
+        if(userOP.isPresent()){
+            throw new Exception400("중복된 유저네임입니다");
+        }
+
+        User user = userJPARepository.save(reqDTO.toEntity());
+
+        return new UserResponse.DTO(user);
     }
 
-    public User login(UserRequest.LoginDTO reqDTO) {
-        User sessionUser = userJPARepository.findByUsernameAndPassword(reqDTO.getUsername(), reqDTO.getPassword())
+    public SessionUser login(UserRequest.LoginDTO reqDTO) {
+        User user = userJPARepository.findByUsernameAndPassword(reqDTO.getUsername(), reqDTO.getPassword())
                 .orElseThrow(() -> new Exception401("인증되지 않았습니다"));
-        return sessionUser;
+        return new SessionUser(user);
     }
 
     @Transactional
-    public User update(Integer id, UserRequest.UpdateDTO reqDTO) {
+    public SessionUser update(Integer id, UserRequest.UpdateDTO reqDTO) {
         User user = userJPARepository.findById(id)
                 .orElseThrow(() -> new Exception404("회원정보를 찾을 수 없습니다"));
 
@@ -67,35 +76,35 @@ public class UserService {
             String imgFilename = UUID.randomUUID() + "_" + reqDTO.getImageName(); // 이미지 파일 오리지널 이름
 
             // 파일 저장 위치 설정
-            Path imgPath = Paths.get("./src/main/resources/static/images/"+ imgFilename);
+            Path imgPath = Paths.get("./src/main/resources/static/images/" + imgFilename);
 
             Files.write(imgPath, decodedBytes);
             user.setImage(imgFilename);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return user;
+        return new SessionUser(user);
     }
 
     // 사용자의 role 에 따라 메인페이지 화면 변경
-    public List<?> getMainPageByUserRole(User sessionUser) {
+    @Transactional
+    public List<?> getMainPageByUserRole(User sessionUser, Pageable pageable) {
         List<?> resultList = new ArrayList<>();
-        Sort sort = Sort.by(Sort.Direction.DESC, "id");
 
         if (sessionUser != null) { // 로그인시
             if (sessionUser.getRole() == 1) {
                 // Role이 1인 경우 Resume 리스트 반환
-                resultList = resumeJPARepository.findAll(sort).stream()
+                resultList = resumeJPARepository.findAll(pageable).stream()
                         .map(resume -> new ResumeResponse.ResumeListDTO((Resume) resume))
                         .toList();
             } else {
                 // Role이 0인 경우 Notice 리스트 반환
-                resultList = noticeJPARepository.findAll(sort).stream()
+                resultList = noticeJPARepository.findAll(pageable).stream()
                         .map(notice -> new NoticeResponse.NoticeListDTO((Notice) notice))
                         .toList();
             }
         } else { // 로그인하지 않은 경우 Notice 리스트 반환
-            resultList = noticeJPARepository.findAll(sort).stream()
+            resultList = noticeJPARepository.findAll(pageable).stream()
                     .map(notice -> new NoticeResponse.NoticeListDTO((Notice) notice))
                     .toList();
         }
@@ -103,24 +112,24 @@ public class UserService {
     }
 
     // 메인페이지 스킬 검색 서비스
-    public List<?> getMainPageByUserRoleAndSkill(User sessionUser, String skillName) {
+    @Transactional
+    public List<?> getMainPageByUserRoleAndSkill(User sessionUser, String skillName, Pageable pageable) {
         List<?> resultList = new ArrayList<>();
-        Sort sort = Sort.by(Sort.Direction.DESC, "id");
 
         if (sessionUser != null) { // 로그인시
             if (sessionUser.getRole() == 1) {
                 // Role이 1인 경우 Resume 리스트 반환
-                resultList = resumeJPARepository.findBySkill(skillName, sort).stream()
+                resultList = resumeJPARepository.findBySkill(skillName, pageable).stream()
                         .map(resume -> new ResumeResponse.ResumeListDTO((Resume) resume))
                         .toList();
             } else {
                 // Role이 0인 경우 Notice 리스트 반환
-                resultList = noticeJPARepository.findBySkill(skillName, sort).stream()
+                resultList = noticeJPARepository.findBySkill(skillName, pageable).stream()
                         .map(notice -> new NoticeResponse.NoticeListDTO((Notice) notice))
                         .toList();
             }
         } else { // 로그인하지 않은 경우 Notice 리스트 반환
-            resultList = noticeJPARepository.findBySkill(skillName, sort).stream()
+            resultList = noticeJPARepository.findBySkill(skillName, pageable).stream()
                     .map(notice -> new NoticeResponse.NoticeListDTO((Notice) notice))
                     .toList();
         }
@@ -128,19 +137,19 @@ public class UserService {
     }
 
     // 마이페이지
-    public List<?> getMyPage(User sessionUser) {
+    @Transactional
+    public List<?> getMyPage(User sessionUser, Pageable pageable) {
         List<?> myPageList = new ArrayList<>();
-        Sort sort = Sort.by(Sort.Direction.DESC, "id");
 
         if (sessionUser != null) { // 로그인시
             if (sessionUser.getRole() == 1) { // 기업
                 // Role이 1인 경우 Resume 리스트 반환
-                myPageList = noticeJPARepository.findByUser(sessionUser, sort).stream()
+                myPageList = noticeJPARepository.findByUser(sessionUser, pageable).stream()
                         .map(notice -> new NoticeResponse.NoticeListDTO((Notice) notice))
                         .toList();
             } else {
                 // Role이 0인 경우 Notice 리스트 반환
-                myPageList = resumeJPARepository.findByUser(sessionUser, sort).stream()
+                myPageList = resumeJPARepository.findByUser(sessionUser, pageable).stream()
                         .map(resume -> new ResumeResponse.ResumeListDTO((Resume) resume))
                         .toList();
             }
@@ -148,5 +157,10 @@ public class UserService {
             throw new Exception401("회원정보를 찾을 수 없습니다.");
         }
         return myPageList;
+    }
+
+    @Transactional
+    public List<Apply> findAppliesByUserId(Integer userId){
+        return applyJPARepository.findAppliesByUserId(userId);
     }
 }

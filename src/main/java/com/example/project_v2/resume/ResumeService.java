@@ -7,7 +7,8 @@ import com.example.project_v2.skill.SkillJPARepository;
 import com.example.project_v2.user.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class ResumeService {
     private final SkillJPARepository skillJPARepository;
 
     @Transactional
-    public Resume update(Integer resumeId, User sessionUser, ResumeRequest.UpdateDTO reqDTO) {
+    public ResumeResponse.DTO update(Integer resumeId, User sessionUser, ResumeRequest.UpdateDTO reqDTO) {
         Resume resume = resumeJPARepository.findById(resumeId)
                 .orElseThrow(() -> new Exception404("이력서를 찾을 수 없습니다."));
 
@@ -28,7 +29,7 @@ public class ResumeService {
             throw new Exception403("이력서를 수정할 권한이 없습니다.");
         }
 
-        resume.setUser(sessionUser);
+        resume.setUser(reqDTO.getUser());
         resume.setTitle(reqDTO.getTitle());
         resume.setCareer(reqDTO.getCareer());
         resume.setLicense(reqDTO.getLicense());
@@ -55,7 +56,7 @@ public class ResumeService {
         skills = skillJPARepository.saveAll(skills);
         resume.setSkills(skills);
 
-        return resume;
+        return new ResumeResponse.DTO(resume, sessionUser);
     }
 
     @Transactional
@@ -69,7 +70,7 @@ public class ResumeService {
     }
 
     @Transactional
-    public Resume save(ResumeRequest.SaveDTO reqDTO, User sessionUser) {
+    public ResumeResponse.DTO save(ResumeRequest.SaveDTO reqDTO, User sessionUser) {
         // 이력서 정보 저장
         Resume resume = resumeJPARepository.save(reqDTO.toEntity(sessionUser));
 
@@ -88,10 +89,13 @@ public class ResumeService {
         skills = skillJPARepository.saveAll(skills);
         resume.setSkills(skills);
 
-        return resumeJPARepository.save(resume);
+        Resume newResume = resumeJPARepository.save(resume);
+
+        return new ResumeResponse.DTO(newResume, sessionUser);
     }
 
     // 이력서 상세보기
+    @Transactional
     public ResumeResponse.DetailDTO resumeDetail(int resumeId, User sessionUser) {
         Resume resume = resumeJPARepository.findByIdJoinUser(resumeId)
                 .orElseThrow(() -> new Exception404("이력서를 찾을 수 없습니다."));
@@ -99,16 +103,16 @@ public class ResumeService {
     }
 
     // 이력서 리스트
-    public List<ResumeResponse.ResumeListDTO> resumeList() {
-        Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        List<Resume> resumeList = resumeJPARepository.findAll(sort);
+    @Transactional
+    public List<ResumeResponse.ResumeListDTO> resumeList(Pageable pageable) {
+        Page<Resume> resumeList = resumeJPARepository.findAll(pageable);
         return resumeList.stream().map(resume -> new ResumeResponse.ResumeListDTO(resume)).toList();
     }
 
     // 이력서 리스트(개인)
-    public List<ResumeResponse.ResumeListDTO> resumeListByUser(User user) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        List<Resume> resumeList = resumeJPARepository.findByUser(user, sort);
+    @Transactional
+    public List<ResumeResponse.ResumeListDTO> resumeListByUser(User user, Pageable pageable) {
+        List<Resume> resumeList = resumeJPARepository.findByUser(user, pageable);
         return resumeList.stream().map(resume -> new ResumeResponse.ResumeListDTO(resume)).toList();
     }
 }

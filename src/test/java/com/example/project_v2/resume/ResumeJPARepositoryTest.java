@@ -6,6 +6,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
@@ -76,7 +77,7 @@ public class ResumeJPARepositoryTest {
         user.setId(1);
 
         // When
-        List<Resume> result = resumeJPARepository.findByUser(user, Sort.unsorted());
+        List<Resume> result = resumeJPARepository.findByUser(user, (Pageable) Sort.unsorted());
 
         // Then
         assertEquals(4, result.size()); // 해당 사용자에 대한 이력서 개수를 확인

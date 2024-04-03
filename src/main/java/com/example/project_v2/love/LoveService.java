@@ -3,7 +3,6 @@ package com.example.project_v2.love;
 import com.example.project_v2._core.errors.exception.Exception401;
 import com.example.project_v2._core.errors.exception.Exception403;
 import com.example.project_v2.board.Board;
-import com.example.project_v2.board.BoardJPARepository;
 import com.example.project_v2.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,12 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class LoveService {
     private final LoveJPARepository loveJPARepository;
-    private final BoardJPARepository boardJPARepository;
 
     @Transactional
-    public Love save(LoveRequest.SaveDTO reqDTO, User sessionUser, Board board){
+    public LoveResponse.DTO save(LoveRequest.SaveDTO reqDTO, User sessionUser, Board board){
         Love love = loveJPARepository.save(reqDTO.toEntity(sessionUser, board));
-        return love;
+        return new LoveResponse.DTO(love, sessionUser, board);
     }
 
     @Transactional

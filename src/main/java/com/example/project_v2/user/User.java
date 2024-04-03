@@ -47,7 +47,7 @@ public class User {
     @Column(nullable = false)
 
     @CreationTimestamp
-    private Timestamp created_at;
+    private Timestamp createdAt;
 
     @Builder
     public User(Integer id, String username, String password, String name, String tel, String birth, String email, String address, String image, Integer role) {

@@ -5,10 +5,29 @@ import com.example.project_v2.reply.Reply;
 import com.example.project_v2.user.User;
 import lombok.Data;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BoardResponse {
+
+    @Data
+    public static class DTO{
+        private Integer id;
+        private String title;
+        private String content;
+        private Integer userId;
+        private Timestamp createdAt;
+
+        public DTO(Board board) {
+            this.id = board.getId();
+            this.title = board.getTitle();
+            this.content = board.getContent();
+            this.userId = board.getUser().getId();
+            this.createdAt = board.getCreatedAt();
+        }
+    }
+
     @Data
     public static class DetailDTO {
         private int id;

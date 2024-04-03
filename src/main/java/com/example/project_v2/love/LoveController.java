@@ -22,8 +22,8 @@ public class LoveController {
     public ResponseEntity<?> save(@PathVariable Integer id, @RequestBody LoveRequest.SaveDTO reqDTO){
         User sessionUser = (User) session.getAttribute("sessionUser");
         Board board = boardService.findById(id);
-        loveService.save(reqDTO, sessionUser, board);
-        return ResponseEntity.ok(new ApiUtil<>(null));
+        LoveResponse.DTO respDTO = loveService.save(reqDTO, sessionUser, board);
+        return ResponseEntity.ok(new ApiUtil<>(respDTO));
     }
 
     // 좋아요 삭제

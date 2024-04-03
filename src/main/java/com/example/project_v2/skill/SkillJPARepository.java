@@ -9,6 +9,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SkillJPARepository extends JpaRepository<Skill, Integer> {
+
+    @Query("select s from Skill s where s.notice.id = :notice_id")
+    List<Skill> findByNoticeId(@Param("notice_id") int notice_id);
+
     @Query("select s from Skill s where s.resume.id = :resume_id")
     List<Skill> findByResumeId(@Param("resume_id") int resume_id);
 

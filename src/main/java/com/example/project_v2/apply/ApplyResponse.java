@@ -5,7 +5,58 @@ import com.example.project_v2.resume.Resume;
 import com.example.project_v2.user.User;
 import lombok.Data;
 
+import java.sql.Timestamp;
+
 public class ApplyResponse {
+
+    @Data
+    public static class UserListDTO{
+        private Integer id; // 유저 번호
+        private Integer resumeUserId; // 이력서 유저 번호
+        private Integer noticeUserId; // 공고 유저 번호
+        private Integer applyId; // 지원 번호
+        private Integer resumeId; // 이력서 번호
+        private Integer noticeId;
+        private String name; // 공고 올린 회사 이름
+        private String title; // 공고 타이틀
+        private String deadLine; // 마감일
+        private String type;
+        private boolean pass;
+
+
+        public UserListDTO(Apply apply) {
+            this.id = apply.getUser().getId();
+            this.resumeUserId = apply.getResume().getUser().getId();
+            this.noticeUserId = apply.getNotice().getUser().getId();
+            this.applyId = apply.getId();
+            this.resumeId = apply.getNotice().getId();
+            this.noticeId = apply.getNotice().getId();
+            this.name = apply.getUser().getName();
+            this.title = apply.getNotice().getTitle();
+            this.deadLine = apply.getNotice().getDeadline();
+            this.type = apply.getNotice().getType();
+            this.pass = apply.getPass();
+        }
+    }
+
+    @Data
+    public static class DTO{
+        private Integer id;
+        private Integer userId;
+        private Integer noticeId;
+        private Integer resumeId;
+        private Boolean pass;
+        private Timestamp createdAt;
+
+        public DTO(Apply apply) {
+            this.id = apply.getId();
+            this.userId = apply.getUser().getId();
+            this.noticeId = apply.getNotice().getId();
+            this.resumeId = apply.getResume().getId();
+            this.pass = apply.getPass();
+            this.createdAt = apply.getCreatedAt();
+        }
+    }
 
     @Data
     public static class ApplyDTO{

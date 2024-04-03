@@ -3,14 +3,14 @@ package com.example.project_v2.scrap;
 import com.example.project_v2._core.errors.exception.Exception401;
 import com.example.project_v2._core.errors.exception.Exception403;
 import com.example.project_v2.notice.Notice;
-import com.example.project_v2.notice.NoticeJPARepository;
 import com.example.project_v2.resume.Resume;
-import com.example.project_v2.resume.ResumeJPARepository;
 import com.example.project_v2.user.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -19,15 +19,29 @@ public class ScrapService {
     private final ScrapJPARepository scrapJPARepository;
 
     @Transactional
-    public Scrap save(Resume resume, ScrapRequest.SaveDTO reqDTO, User sessionUser) {
-        Scrap scrap = scrapJPARepository.save(reqDTO.toEntity(sessionUser, resume));
-        return scrap;
+    public List<ScrapResponse.ScrapListDTO> scrapList(User sessionUser, Integer id, Pageable pageable){
+        if(sessionUser != null){ // 로그인 했을 때
+            if(sessionUser.getId() != id){ // 로그인 한 회원의 id와 스크랩 목록 주소의 id랑 다른 경우
+                throw new Exception403("스크랩 목록을 조회할 권한이 없습니다.");
+            }
+            // 해당 유저의 스크랩 내역 조회 및 출력
+            List<Scrap> scrapList = scrapJPARepository.findById(sessionUser.getId(), pageable);
+            return scrapList.stream().map(scrap -> new ScrapResponse.ScrapListDTO(scrap, sessionUser)).toList();
+        }else { //로그인 하지 않은 경우
+            throw new Exception401("로그인 먼저 해주세요");
+        }
     }
 
     @Transactional
-    public Scrap save(Notice notice, ScrapRequest.SaveDTO reqDTO, User sessionUser) {
+    public ScrapResponse.DTO save(Resume resume, ScrapRequest.SaveDTO reqDTO, User sessionUser) {
+        Scrap scrap = scrapJPARepository.save(reqDTO.toEntity(sessionUser, resume));
+        return new ScrapResponse.DTO(scrap);
+    }
+
+    @Transactional
+    public ScrapResponse.DTO save(Notice notice, ScrapRequest.SaveDTO reqDTO, User sessionUser) {
         Scrap scrap = scrapJPARepository.save(reqDTO.toEntity(sessionUser, notice));
-        return scrap;
+        return new ScrapResponse.DTO(scrap);
     }
 
     @Transactional

@@ -5,7 +5,7 @@ import com.example.project_v2._core.errors.exception.Exception404;
 import com.example.project_v2.user.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,25 +16,25 @@ public class BoardService {
     private final BoardJPARepository boardJPARepository;
 
     @Transactional
-    public Board findById(Integer id){
+    public Board findById(Integer id) {
         Board board = boardJPARepository.findById(id)
                 .orElseThrow(() -> new Exception404("존재하지 않는 게시물 입니다"));
         return board;
     }
 
     @Transactional
-    public Board update(Integer boardId, Integer sessionUserId, BoardRequest.UpdateDTO reqDTO){
+    public BoardResponse.DTO update(Integer boardId, Integer sessionUserId, BoardRequest.UpdateDTO reqDTO) {
         Board board = boardJPARepository.findById(boardId)
-                .orElseThrow(() -> new Exception404("게시글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new Exception404("게시글을 찾을 수 없습니다"));
 
-        if(sessionUserId != board.getUser().getId()){
+        if (sessionUserId != board.getUser().getId()) {
             throw new Exception403("게시글을 수정할 권한이 없습니다.");
         }
 
         board.setTitle(reqDTO.getTitle());
         board.setContent(reqDTO.getContent());
 
-        return board;
+        return new BoardResponse.DTO(board);
     } // 더티 체킹
 
     @Transactional
@@ -48,9 +48,9 @@ public class BoardService {
     }
 
     @Transactional
-    public Board save(BoardRequest.SaveDTO reqDTO, User sessionUser) {
+    public BoardResponse.DTO save(BoardRequest.SaveDTO reqDTO, User sessionUser) {
         Board board = boardJPARepository.save(reqDTO.toEntity(sessionUser));
-        return board;
+        return new BoardResponse.DTO(board);
     }
 
     // 게시글 상세보기
@@ -60,9 +60,10 @@ public class BoardService {
         return new BoardResponse.DetailDTO(board, sessionUser);
     }
 
-    public List<BoardResponse.MainDTO> boardMain() {
-        Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        List<Board> boardList = boardJPARepository.findAll(sort);
+
+    // 게시글 목록 보기
+    public List<BoardResponse.MainDTO> boardMain(Pageable pageable) {
+        List<Board> boardList = boardJPARepository.findAllWithUser();
         return boardList.stream().map(board -> new BoardResponse.MainDTO(board)).toList();
     }
 
