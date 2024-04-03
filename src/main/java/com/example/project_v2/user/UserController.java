@@ -145,7 +145,7 @@ public class UserController {
                                        @RequestParam(defaultValue = "id") String sortBy,
                                        @RequestParam(defaultValue = "desc") String direction,
                                        @PathVariable Integer id) {
-        User sessionUser = (User) session.getAttribute("sessionUser");
+        SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
         List<ScrapResponse.ScrapListDTO> respDTO = scrapService.scrapList(sessionUser, id, pageable);
