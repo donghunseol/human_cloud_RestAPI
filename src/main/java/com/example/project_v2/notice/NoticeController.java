@@ -1,6 +1,7 @@
 package com.example.project_v2.notice;
 
 import com.example.project_v2._core.util.ApiUtil;
+import com.example.project_v2.user.SessionUser;
 import com.example.project_v2.user.User;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -27,7 +28,7 @@ public class NoticeController {
                                           @RequestParam(defaultValue = "10") int size,
                                           @RequestParam(defaultValue = "id") String sortBy,
                                           @RequestParam(defaultValue = "desc") String direction) {
-        User sessionUser = (User) session.getAttribute("sessionUser");
+        SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
         List<NoticeResponse.NoticeListDTO> respDTO = noticeService.noticeListByUser(sessionUser, pageable);
@@ -49,7 +50,7 @@ public class NoticeController {
     // 공고 작성
     @PostMapping("/api/notices")
     public ResponseEntity<?> save(@Valid @RequestBody NoticeRequest.SaveDTO reqDTO, Errors errors) {
-        User sessionUser = (User) session.getAttribute("sessionUser");
+        SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         NoticeResponse.DTO respDTO = noticeService.save(reqDTO, sessionUser);
         return ResponseEntity.ok(new ApiUtil<>(respDTO));
     }
@@ -57,7 +58,7 @@ public class NoticeController {
     // 공고 상세 보기
     @GetMapping("/notices/{id}/detail")
     public ResponseEntity<?> detail(@PathVariable Integer id) {
-        User sessionUser = (User) session.getAttribute("sessionUser");
+        SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         NoticeResponse.DetailDTO respDTO = noticeService.noticeDetail(id, sessionUser);
         return ResponseEntity.ok(new ApiUtil<>(respDTO));
     }
@@ -65,7 +66,7 @@ public class NoticeController {
     // 공고 삭제
     @DeleteMapping("/api/notices/{id}")
     public ResponseEntity<?> delete(@PathVariable Integer id) {
-        User sessionUser = (User) session.getAttribute("sessionUser");
+        SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         noticeService.delete(id, sessionUser.getId());
         return ResponseEntity.ok(new ApiUtil<>(null));
     }
@@ -73,8 +74,8 @@ public class NoticeController {
     // 공고 수정
     @PutMapping("/api/notices/{id}")
     public ResponseEntity<?> update(@PathVariable Integer id, @Valid @RequestBody NoticeRequest.UpdateDTO reqDTO, Errors errors) {
-        User sessionUser = (User) session.getAttribute("sessionUser");
-        reqDTO.toEntity(sessionUser);
+        SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
+        //reqDTO.toEntity(sessionUser);
         NoticeResponse.DTO respDTO = noticeService.update(id, reqDTO, sessionUser);
         return ResponseEntity.ok(new ApiUtil<>(respDTO));
     }

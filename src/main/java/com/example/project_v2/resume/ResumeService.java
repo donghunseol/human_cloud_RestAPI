@@ -68,9 +68,11 @@ public class ResumeService {
 
     @Transactional
     public void delete(Integer resumeId, Integer sessionUserId) {
+        User user = userJPARepository.findById(sessionUserId)
+                .orElseThrow(() -> new Exception404("존재 하지 않는 계정입니다"));
         Resume resume = resumeJPARepository.findById(resumeId)
                 .orElseThrow(() -> new Exception404("이력서를 찾을 수 없습니다."));
-        if (sessionUserId != resume.getUser().getId()) {
+        if (user.getId() != resumeId) {
             throw new Exception403("이력서를 삭제할 권한이 없습니다.");
         }
         resumeJPARepository.deleteById(resumeId);

@@ -39,7 +39,7 @@ public class ResumeController {
     // 이력서 삭제
     @DeleteMapping("/api/resumes/{id}")
     public ResponseEntity<?> delete(@PathVariable Integer id) {
-        User sessionUser = (User) session.getAttribute("sessionUser");
+        SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         resumeService.delete(id, sessionUser.getId());
         return ResponseEntity.ok(new ApiUtil<>(null));
     }
