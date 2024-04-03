@@ -20,7 +20,7 @@ public class NoticeController {
     private final HttpSession session;
 
     // 공고 회원 목록 보기
-    @GetMapping("/notices/my-notices")
+    @GetMapping("/api/notices/my-notices")
     public ResponseEntity<?> myNoticeList(@RequestParam(defaultValue = "0") int page,
                                           @RequestParam(defaultValue = "10") int size,
                                           @RequestParam(defaultValue = "id") String sortBy,
@@ -33,7 +33,7 @@ public class NoticeController {
     }
 
     // 공고 목록 보기
-    @GetMapping("/notices")
+    @GetMapping("/api/notices")
     public ResponseEntity<?> index(@RequestParam(defaultValue = "0") int page,
                                    @RequestParam(defaultValue = "10") int size,
                                    @RequestParam(defaultValue = "id") String sortBy,
@@ -53,7 +53,7 @@ public class NoticeController {
     }
 
     // 공고 상세 보기
-    @GetMapping("/notices/{id}/detail")
+    @GetMapping("/api/notices/{id}/detail")
     public ResponseEntity<?> detail(@PathVariable Integer id) {
         User sessionUser = (User) session.getAttribute("sessionUser");
         NoticeResponse.DetailDTO respDTO = noticeService.noticeDetail(id, sessionUser);

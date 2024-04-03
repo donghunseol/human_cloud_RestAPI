@@ -57,6 +57,7 @@ public class ApplyService {
         return new ApplyResponse.SelectResumeDTO(apply, sessionUser);
     }
 
+    // 지원 하기
     @Transactional
     public ApplyResponse.DTO save(ApplyRequest.SaveDTO reqDTO, User sessionUser) {
         Optional<Notice> optionalNotice = reqDTO.getNoticeId() == null ? Optional.empty() : noticeJPARepository.findById(reqDTO.getNoticeId());
