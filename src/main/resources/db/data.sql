@@ -22,8 +22,6 @@ insert into user_tb(username, password, name, tel, birth, email, address, image,
 values ('comlove', '1234', '러브회사', '01011111111', '130313', 'love@naver.com', '러브도 러브시 러브구 러브동', '/images/naver.png', 1,
         now());
 
-
-
 -- board
 insert into board_tb(user_id, title, content, created_at)
 values (1, '안녕하십니까', '처음 왔습니다 인사드립니다!', now());
