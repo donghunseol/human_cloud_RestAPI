@@ -44,20 +44,4 @@ public class SessionUser {
         this.role = user.getRole();
         this.createdAt = user.getCreatedAt();
     }
-
-    public static User toEntity(SessionUser sessionUser){
-        User user = new User();
-        user.setId(sessionUser.getId());
-        user.setUsername(sessionUser.getUsername());
-        user.setName(sessionUser.getName());
-        user.setTel(sessionUser.getTel());
-        user.setBirth(sessionUser.getBirth());
-        user.setEmail(sessionUser.getEmail());
-        user.setAddress(sessionUser.getAddress());
-        user.setImage(sessionUser.getImage());
-        user.setRole(sessionUser.getRole());
-        user.setCreatedAt(sessionUser.getCreatedAt());
-
-        return user;
-    }
 }
