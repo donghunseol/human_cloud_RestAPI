@@ -10,8 +10,10 @@ import com.example.project_v2.resume.ResumeService;
 import com.example.project_v2.user.SessionUser;
 import com.example.project_v2.user.User;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -35,7 +37,7 @@ public class ScrapController {
 
     // 스크랩 등록
     @PostMapping("/api/scraps/{id}")
-    public ResponseEntity<?> save(@PathVariable Integer id, @RequestBody ScrapRequest.SaveDTO reqDTO) {
+    public ResponseEntity<?> save(@PathVariable Integer id, @Valid @RequestBody ScrapRequest.SaveDTO reqDTO, Errors errors) {
         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         ScrapResponse.DTO respDTO = scrapService.save(id, reqDTO, sessionUser);
         return ResponseEntity.ok(new ApiUtil<>(respDTO));

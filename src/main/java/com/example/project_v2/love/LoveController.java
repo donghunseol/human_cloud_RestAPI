@@ -6,8 +6,10 @@ import com.example.project_v2.board.BoardService;
 import com.example.project_v2.user.SessionUser;
 import com.example.project_v2.user.User;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -20,7 +22,7 @@ public class LoveController {
 
     // 좋아요 입력
     @PostMapping("/api/loves/{id}")
-    public ResponseEntity<?> save(@PathVariable Integer id, @RequestBody LoveRequest.SaveDTO reqDTO){
+    public ResponseEntity<?> save(@PathVariable Integer id, @Valid @RequestBody LoveRequest.SaveDTO reqDTO, Errors errors){
         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         Board board = boardService.findById(id);
         LoveResponse.DTO respDTO = loveService.save(reqDTO, sessionUser, board);
