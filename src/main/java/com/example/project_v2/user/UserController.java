@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,28 +51,17 @@ public class UserController {
 
     // 회원 가입
     @PostMapping("/users/join")
-    public ResponseEntity<?> join(@Valid @RequestBody UserRequest.JoinDTO reqDTO, Errors errors) {
+    public ResponseEntity<?> join(@Valid @RequestBody UserRequest.JoinDTO reqDTO, Errors errors, BindingResult bindingResult) {
         UserResponse.DTO respDTO = userService.join(reqDTO);
         return ResponseEntity.ok(new ApiUtil<>(respDTO));
-    }
-
-    // 회원 가입 페이지
-    @GetMapping("/users/join-form")
-    public String joinForm() {
-        return "user/join-form";
     }
 
     // 로그인
     @PostMapping("/users/login")
     public ResponseEntity<?> login(@Valid @RequestBody UserRequest.LoginDTO reqDTO) {
         String jwt = userService.login(reqDTO);
-        return ResponseEntity.ok().header("Authorization", "Bearer " + jwt).body(new ApiUtil<>(null)); // header 문법
-    }
-
-    // 로그인 화면
-    @GetMapping("/users/login-form")
-    public String login() {
-        return "/user/login-form";
+        UserResponse.LoginDTO respDTO = userService.loginByDTO(reqDTO);
+        return ResponseEntity.ok().header("Authorization", "Bearer " + jwt).body(new ApiUtil<>(respDTO)); // header 문법
     }
 
     // 회원 정보 수정
@@ -82,13 +72,6 @@ public class UserController {
         session.setAttribute("sessionUser", newSessionUser);
         return ResponseEntity.ok(new ApiUtil<>(newSessionUser));
     }
-
-    // 회원 정보 수정 화면
-    @GetMapping("/api/users/{id}/update-form")
-    public String updateForm(@PathVariable Integer id) {
-        return "/user/update-form";
-    }
-
 
     // 로그아웃
     @GetMapping("/api/users/logout")

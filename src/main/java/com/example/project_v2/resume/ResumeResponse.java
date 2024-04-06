@@ -40,6 +40,7 @@ public class ResumeResponse {
     @Data
     public static class DetailDTO {
         private Integer id;
+        private String name;
         private String title;
         private String email;
         private String tel;
@@ -57,6 +58,7 @@ public class ResumeResponse {
 
         public DetailDTO(Resume resume, User sessionUser) {
             this.id = resume.getId();
+            this.name = resume.getUser().getName();
             this.title = resume.getTitle();
             this.email = resume.getUser().getEmail();
             this.tel = resume.getUser().getTel();
