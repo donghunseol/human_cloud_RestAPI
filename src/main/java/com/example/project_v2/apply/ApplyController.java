@@ -6,9 +6,11 @@ import com.example.project_v2._core.util.JwtUtil;
 import com.example.project_v2.user.SessionUser;
 import com.example.project_v2.user.User;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -20,7 +22,7 @@ public class ApplyController {
 
     // 합격 불합격
     @PostMapping("/api/applies/pass/{id}")
-    public ResponseEntity<?> resumePass(@PathVariable Integer id, @RequestBody ApplyRequest.PassDTO passDTO) {
+    public ResponseEntity<?> resumePass(@PathVariable Integer id, @Valid @RequestBody ApplyRequest.PassDTO passDTO, Errors errors) {
         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         ApplyResponse.DTO respDTO = applyService.resumePass(passDTO, sessionUser);
         return ResponseEntity.ok(new ApiUtil<>(respDTO));
@@ -44,7 +46,7 @@ public class ApplyController {
 
     // 지원하기
     @PostMapping("/api/applies/{id}")
-    public ResponseEntity<?> save(@RequestBody ApplyRequest.SaveDTO reqDTO) {
+    public ResponseEntity<?> save(@Valid @RequestBody ApplyRequest.SaveDTO reqDTO, Errors errors) {
         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         ApplyResponse.DTO respDTO = applyService.save(reqDTO, sessionUser);
         return ResponseEntity.ok(new ApiUtil<>(respDTO));

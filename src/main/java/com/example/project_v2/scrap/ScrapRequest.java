@@ -3,6 +3,7 @@ package com.example.project_v2.scrap;
 import com.example.project_v2.notice.Notice;
 import com.example.project_v2.resume.Resume;
 import com.example.project_v2.user.User;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,8 +13,12 @@ public class ScrapRequest {
     @NoArgsConstructor
     @Data
     public static class SaveDTO {
+
         private Integer id;
+
+        @NotEmpty(message = "스크랩하는 계정이 로그인이 안 된 상태입니다")
         private User user;
+
         private Notice notice;
         private Resume resume;
 

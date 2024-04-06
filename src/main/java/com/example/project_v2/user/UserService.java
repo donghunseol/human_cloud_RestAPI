@@ -61,6 +61,13 @@ public class UserService {
         return jwt;
     }
 
+    public UserResponse.LoginDTO loginByDTO(UserRequest.LoginDTO reqDTO) {
+        User user = userJPARepository.findByUsernameAndPassword(reqDTO.getUsername(), reqDTO.getPassword())
+                .orElseThrow(() -> new Exception401("인증되지 않았습니다"));
+
+        return new UserResponse.LoginDTO(user);
+    }
+
     @Transactional
     public SessionUser update(Integer id, UserRequest.UpdateDTO reqDTO) {
         User user = userJPARepository.findById(id)
