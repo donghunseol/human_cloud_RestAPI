@@ -52,6 +52,7 @@ public class ResumeResponse {
         private String major;
         private Integer userId;
         private boolean isResumeOwner;
+        private boolean isComp; // 스크랩 기업 여부 확인
 
         private List<SkillDTO> skills = new ArrayList<>();
 
@@ -74,6 +75,10 @@ public class ResumeResponse {
                 if (sessionUser.getId() == userId) {
                     isResumeOwner = true;
                 }
+            }
+            this.isComp = false;
+            if(sessionUser.getRole() == 1){
+                this.isComp = true;
             }
             this.skills = resume.getSkills().stream().map(skill -> new SkillDTO(skill)).toList();
         }
