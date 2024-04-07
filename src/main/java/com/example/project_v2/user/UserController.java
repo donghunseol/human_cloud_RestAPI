@@ -97,8 +97,10 @@ public class UserController {
     // 마이 페이지 - 지원한 공고 (공고 출력 / 이력서 신청 여부)
     @GetMapping("/api/myPages/{id}/selectList")
     public ResponseEntity<?> myPageList(@PathVariable("id") Integer userId) {
+        SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
+
         // 사용자가 지원한 공고 정보 조회
-        List<Apply> applies = userService.findAppliesByUserId(userId);
+        List<Apply> applies = userService.findAppliesByUserId(sessionUser);
 
         // 응답 객체 구성
         List<ApplyResponse.UserListDTO> responseList = applies.stream()
