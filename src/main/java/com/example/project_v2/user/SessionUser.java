@@ -16,10 +16,11 @@ public class SessionUser {
     private String address;
     private String image; // 이미지 경로만 저장
     private Integer role;
+    private boolean isLoginUser; // 로그인 유저가 누군지 체크
     private Timestamp createdAt;
 
     @Builder
-    public SessionUser(Integer id, String username, String name, String tel, String birth, String email, String address, String image, Integer role, Timestamp createdAt) {
+    public SessionUser(Integer id, String username, String name, String tel, String birth, String email, String address, String image, Integer role, boolean isLoginUser, Timestamp createdAt) {
         this.id = id;
         this.username = username;
         this.name = name;
@@ -29,6 +30,7 @@ public class SessionUser {
         this.address = address;
         this.image = image;
         this.role = role;
+        this.isLoginUser = isLoginUser;
         this.createdAt = createdAt;
     }
 
@@ -43,5 +45,9 @@ public class SessionUser {
         this.image = user.getImage();
         this.role = user.getRole();
         this.createdAt = user.getCreatedAt();
+        this.isLoginUser = false;
+        if(user.getRole() == 1){
+            this.isLoginUser = true;
+        }
     }
 }

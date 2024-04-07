@@ -14,7 +14,7 @@ public class JwtUtil {
     public static String create(User user){
         String jwt = JWT.create()
                 .withSubject("blog")
-                .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 48))
+                .withExpiresAt(new Date(System.currentTimeMillis() + 1000L * 60L * 60L * 24L  * 365L)) // 1년간 지속
                 .withClaim("id", user.getId())
                 .withClaim("username", user.getUsername())
                 .sign(Algorithm.HMAC512("shine")); // 대칭키 사용 나중에 shine 이라 적은 자리에 환경 변수를 넣는다 OS 의 값을 땡겨와야한다!
