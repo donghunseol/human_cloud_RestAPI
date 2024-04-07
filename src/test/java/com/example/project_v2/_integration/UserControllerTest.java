@@ -1,12 +1,8 @@
-package com.example.project_v2.web;
+package com.example.project_v2._integration;
 
 import com.example.project_v2._core.util.JwtUtil;
-import com.example.project_v2.user.User;
-import com.example.project_v2.user.UserJPARepository;
 import com.example.project_v2.user.UserRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.persistence.EntityManager;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -28,12 +24,6 @@ public class UserControllerTest {
 
     @Autowired
     private MockMvc mvc;
-
-    @Autowired
-    private EntityManager em;
-
-    @Autowired
-    private UserJPARepository userJPARepository;
 
     @Test
     public void join_success_test() throws Exception {
@@ -58,7 +48,6 @@ public class UserControllerTest {
         joinUser.setRole(role);
 
         String jwt = JwtUtil.create(joinUser.toEntity()); // jwt 생성
-        System.out.println();
 
         // when
         // Spring MVC 테스트를 위한 MockMvc 객체를 사용하여 /users/login 경로로 POST 요청을 보냅니다.
@@ -99,7 +88,6 @@ public class UserControllerTest {
         joinUser.setRole(role);
 
         String jwt = JwtUtil.create(joinUser.toEntity()); // jwt 생성
-        System.out.println();
 
         // when
         // Spring MVC 테스트를 위한 MockMvc 객체를 사용하여 /users/login 경로로 POST 요청을 보냅니다.
