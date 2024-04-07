@@ -23,4 +23,12 @@ public interface ApplyJPARepository extends JpaRepository<Apply, Integer> {
     @Modifying
     @Query("delete from Apply a where a.notice.id = :id")
     void deleteByNoticeId(@Param("id") Integer id);
+
+    // 특정 공고에 지원한 인원 출력
+    @Query("SELECT a FROM Apply a JOIN FETCH a.user u JOIN FETCH a.notice n WHERE a.notice.user.id = :userId")
+    List<Apply> findAppliesByNoticeUserId(@Param("userId") Integer userId);
+
+    // 특정 이력서로 지원한 인원 출력
+    @Query("SELECT a FROM Apply a JOIN FETCH a.user u JOIN FETCH a.notice n WHERE a.resume.user.id = :userId")
+    List<Apply> findAppliesByResumeUserId(@Param("userId") Integer userId);
 }

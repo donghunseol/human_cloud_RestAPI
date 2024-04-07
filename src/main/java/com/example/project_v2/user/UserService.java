@@ -178,7 +178,14 @@ public class UserService {
     }
 
     @Transactional
-    public List<Apply> findAppliesByUserId(Integer userId){
-        return applyJPARepository.findAppliesByUserId(userId);
+    public List<Apply> findAppliesByUserId(SessionUser sessionUser){
+        User user = userJPARepository.findById(sessionUser.getId())
+                .orElseThrow(() -> new Exception404("회원정보를 찾을 수 없습니다."));
+
+        if(user.getRole() == 1){
+            return applyJPARepository.findAppliesByNoticeUserId(sessionUser.getId());
+        }else {
+            return applyJPARepository.findAppliesByResumeUserId(sessionUser.getId());
+        }
     }
 }
