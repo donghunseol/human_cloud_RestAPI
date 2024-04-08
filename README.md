@@ -10,11 +10,12 @@
 - ResponseEntity ORM
 - JSON으로 변환
 - image base64로 변환
+- JUnit 테스트 / 통합 테스트
 - AOP(유효성검사)
 - JWT
 
 # 시연영상
-
+- 추가 예정
 
 # 발표자료
 [3조_이력서_홈페이지_제작_PPT.pdf](https://drive.usercontent.google.com/u/0/uc?id=1MbFXF5yFTtzqYftx6La-jFZwx9N559hm&export=download)
@@ -32,24 +33,23 @@
 # 기술 스택
 
 ### IDE
-[![IntelliJ IDEA](https://img.shields.io/badge/-IntelliJ%20IDEA-blue?logo=intellij-idea&logoColor=white)](https://www.jetbrains.com/idea/)
-![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=flat&logo=visual-studio-code&logoColor=white)
+![IntelliJ IDEA](https://img.shields.io/badge/-IntelliJ%20IDEA-blue?logo=intellij-idea&logoColor=white)
 ### FrameWork
-[![Spring Boot](https://img.shields.io/badge/-Spring%20Boot-brightgreen?logo=spring&logoColor=white)](https://spring.io/projects/spring-boot)
+![Spring Boot](https://img.shields.io/badge/-Spring%20Boot-brightgreen?logo=spring&logoColor=white)
 ![Bootstrap](https://img.shields.io/badge/bootstrap-%238511FA.svg?style=flat&logo=bootstrap&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-black?logo=jsonwebtokens&logoColor=white)
+![JPA](https://img.shields.io/badge/JPA-red?logo=spring&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-%23323330.svg?style=flat&logo=javascript&logoColor=white)
+![Java](https://img.shields.io/badge/Java-%23ED8B00.svg?style=flat&logo=openjdk&logoColor=white)
+![JUnit](https://img.shields.io/badge/JUnit-green?logo=junit5&logoColor=white)
 ### DB
-[![H2](https://img.shields.io/badge/-H2-orange?logo=h2&logoColor=white)](http://www.h2database.com)
-### 사용 기술
-![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=flat&logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=flat&logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=flat&logo=javascript&logoColor=%23F7DF1E)
-![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=flat&logo=openjdk&logoColor=white)
-![jQuery](https://img.shields.io/badge/jquery-%230769AD.svg?style=flat&logo=jquery&logoColor=white)
+![H2](https://img.shields.io/badge/-H2-orange?&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-black?&logo=mysql&logoColor=white)
 ### 협업 툴
-[![Notion](https://img.shields.io/badge/-Notion-black?logo=notion&logoColor=white)](https://www.notion.so)
-[![Git](https://img.shields.io/badge/-Git-red?logo=git&logoColor=white)](https://git-scm.com)
-[![GitHub](https://img.shields.io/badge/-GitHub-black?logo=github&logoColor=white)](https://github.com)
-[![Slack](https://img.shields.io/badge/-Slack-purple?logo=slack&logoColor=white)](https://slack.com)
+![Notion](https://img.shields.io/badge/-Notion-black?logo=notion&logoColor=white)
+![Git](https://img.shields.io/badge/-Git-red?logo=git&logoColor=white)
+![GitHub](https://img.shields.io/badge/-GitHub-black?logo=github&logoColor=white)
+![Slack](https://img.shields.io/badge/-Slack-purple?logo=slack&logoColor=white)
 ![KakaoTalk](https://img.shields.io/badge/kakaotalk-ffcd00.svg?style=flat&logo=kakaotalk&logoColor=000000)
 # 계획
 1. JPA ORM DTO Interceptor
@@ -66,10 +66,10 @@
 6. 통합 테스트
 7. 배포 세팅
 
-# ERD
-![image](https://github.com/minmeanmin/human_cloud_web_project1/assets/118310514/bada12df-d904-4781-90b6-05bb224a0034)
-
 ## 브랜치 전략
 - 각 이슈 발생 시 `새로운 브랜치`를 생성
 - 작업을 완료 후 Merge 전 `코드 리뷰 진행` 및 `피드백`
 - 브랜치 명은 각 인원별 `패키지/기능/이니셜`로 컨벤션을 맞춰 진행
+
+# ERD
+![image](https://github.com/minmeanmin/human_cloud_web_project1/assets/118310514/bada12df-d904-4781-90b6-05bb224a0034)
