@@ -18,7 +18,7 @@
 - 추가 예정
 
 # 발표자료
-[3조_이력서_홈페이지_제작_PPT.pdf](https://drive.usercontent.google.com/u/0/uc?id=1MbFXF5yFTtzqYftx6La-jFZwx9N559hm&export=download)
+[3조_RestAPI_PPT.pdf](https://docs.google.com/presentation/d/1dyOqbiTzfzQTIHUKZB99VtqL2FCe_kyf/edit?usp=drive_link&ouid=104872751959430579271&rtpof=true&sd=true)
 
 # 프로젝트 기간
 - 2024.03.22 ~ 2024.04.03
