@@ -15,7 +15,7 @@
 - JWT
 
 # 시연영상
-- 추가 예정
+[3조 시연 영상](https://youtu.be/RN7b7EluueI?si=-fwbftItqRui5HoD)
 
 # 발표자료
 [3조_RestAPI_PPT.pdf](https://docs.google.com/presentation/d/1dyOqbiTzfzQTIHUKZB99VtqL2FCe_kyf/edit?usp=drive_link&ouid=104872751959430579271&rtpof=true&sd=true)
